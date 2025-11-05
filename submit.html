@@ -28,11 +28,36 @@ body {
   width: 80vw;
   border: 2px dotted #000;
 }
+
+  .popup-form {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;          
+    width: 300px;        
+  }
+  .popup-form label {
+    font-weight: bold;
+    margin-top: 4px;
+  }
+  .popup-form input,
+  .popup-form select,
+  .popup-form textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 3px;
+  }
+  .popup-form button {
+    margin-top: 6px;
+    padding: 4px;
+    cursor: pointer;
+  }
 </style>
 
 <body>
   <div id="map"></div>
   <script src="submit-script.js"></script>
 </body>
+
+</html>
 
 </html>
