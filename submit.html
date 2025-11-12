@@ -11,53 +11,361 @@
      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
      crossorigin=""></script>
   <script src="https://unpkg.com/papaparse@5.3.2/papaparse.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
 </head>
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+:root {
+  --blue: #0000ff;
+  --highlight: #fff933;
+  --font: "Courier Prime", monospace;
+}
+
+#nav-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 16px;
+  gap: 8px;
+}
+
+.nav-btn {
+  flex: 1;
+  font-weight: 700;
+  border: 2px solid var(--blue);
+  background: #fff;
+  color: var(--blue);
+  font-family: var(--font);
+  font-size: 14px;
+  margin-top: 4px;
+  margin-bottom: 12px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+.nav-btn:hover {
+  background: var(--blue);
+  color: #fff;
+}
+
 body {
   margin: 0;
   height: 100vh;
+  background: var(--highlight);
+  font-family: var(--font);
   display: flex;
   justify-content: center;
   align-items: center;
-  font-family: "Courier New", monospace;
+  color: var(--blue);
+}
+
+#map-wrapper {
+  display: flex;
+  align-items: stretch;
+  justify-content: flex-start;
+  width: 90vw;
+  height: 90vh;
+  padding: 1vw;
+  box-sizing: border-box;
+  gap: 1vw;
+  transition: all 0.3s ease;
+}
+
+#info-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 260px;
+  background: #fff;
+  border: 2px dotted var(--blue);
+  box-shadow: 4px 4px 0 var(--highlight);
+  transition: width 0.3s ease;
+  overflow: hidden;
+}
+
+/* collapsed state */
+#info-panel.collapsed {
+  width: 37.5px;
+  height: 42.5px;
+  transition: all 0.3s ease;
+}
+
+/* toggle button */
+#toggle-info {
+  position: absolute;
+  top: 10px;
+  right: 6px;
+  border: 2px solid var(--blue);
+  background: var(--highlight);
+  color: var(--blue);
+  font-family: var(--font);
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  font-weight: bold;
+  text-align: center;
+  line-height: 20px;
+  z-index: 10;
+}
+
+#toggle-info:hover {
+  background: var(--blue);
+  color: var(--highlight);
+}
+
+/* info box content */
+#info-box {
+  padding: 16px;
+  line-height: 1.5;
+  transition: opacity 0.3s ease;
+  overflow-y: auto;          /* enables scrolling */
+  max-height: 100%;          /* fits within panel */
+  scrollbar-width: 1px;
+  scrollbar-color: var(--blue) #ffffff;
+}
+
+#info-panel.collapsed #info-box {
+  opacity: 0;
+  pointer-events: none;
+}
+
+#info-box p {
+  margin: 0 0 10px 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--blue);
+}
+
+#info-box p.intro {
+  font-size: 18px;
+  font-weight: 700;
+  text-transform: uppercase;
+  border-bottom: 2px dotted var(--blue);
+  padding-bottom: 6px;
+  margin-bottom: 10px;
+  border-top: 2px dotted var(--blue);
+  padding-top: 6px;
+  margin-top: 10px;
+}
+
+/* instruction section — subtle yellow highlight background */
+#info-box p.instruction {
+  padding: 4px;
+}
+
+/* goal section — italic and larger text */
+#info-box p.goal {
+  font-size: 14px;
+  color: var(--blue);
+  margin-top: 12px;
+  border-top: 2px dotted var(--blue);
+  padding-top: 6px;
+  border-bottom: 2px dotted var(--blue);
+  padding-bottom: 6px;
+  margin-bottom: 10px;
+}
+#info-box .highlight {
+  background: var(--highlight);
+  color: var(--blue);
+  padding: 0 2px;
+}
+
+.title-image {
+  width: 100%;
+  height: auto;
+  display: block;
+  margin-bottom: 12px;
+  background: #fff;
+  filter: brightness(1.1) contrast(1.1);
 }
 
 #map {
-  height: 80vh;
-  width: 80vw;
-  border: 2px dotted #000;
+  flex: 1;
+  height: 100%;
+  border: 2px dotted var(--blue);
+  background: #fff;
+  transition: flex 0.3s ease;
 }
 
-  .popup-form {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;          
-    width: 300px;        
+.popup-container {
+  width: 260px;
+  background: #fff;
+  color: var(--blue);
+  border: 2px dotted var(--blue);
+  padding: 8px;
+  font-family: var(--font);
+}
+
+.popup-container h3 {
+  color: var(--blue);
+  font-weight: bold;
+  text-transform: uppercase;
+  margin: 0 0 8px 0;
+}
+
+.popup-container label {
+  display: block;
+  margin-top: 8px;
+  color: var(--blue);
+}
+
+.popup-container input,
+.popup-container select,
+.popup-container textarea {
+  width: 100%;
+  border: 2px dotted var(--blue);
+  background: #ffff66;
+  color: var(--blue);
+  padding: 4px;
+  box-sizing: border-box;
+  border-radius: 0;
+  outline: none;
+  transition: background 0.2s ease, border 0.2s ease;
+}
+
+.popup-container input:focus,
+.popup-container select:focus,
+.popup-container textarea:focus {
+  background: #fff;
+  border: 2px solid var(--blue);
+}
+
+.popup-container textarea {
+  resize: vertical;
+}
+
+.popup-container button {
+  margin-top: 10px;
+  width: 100%;
+  background: #fff;
+  color: var(--blue);
+  border: 2px solid var(--blue);
+  font-weight: bold;
+  padding: 6px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.popup-container button:hover {
+  background: var(--blue);
+  color: #fff;
+}
+
+/* === Leaflet Overwrites === */
+.leaflet-container {
+  background: #fff;
+}
+
+.leaflet-popup-content-wrapper {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 6px;
+}
+
+.leaflet-popup-tip {
+  background: #fff !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.leaflet-control-attribution {
+  background: #fff;
+  color: var(--blue);
+  border: none !important;
+  padding: 0 4px;
+}
+
+.leaflet-bar a {
+  background: #fff;
+  color: var(--blue);
+  border: 2px solid var(--blue);
+}
+
+.leaflet-bar a:hover {
+  background: var(--blue);
+  color: #fff;
+}
+
+body, button, input, select, textarea, .leaflet-container, .leaflet-popup-content {
+  font-family: "Courier Prime", "Courier New", monospace !important;
+  letter-spacing: 0;
+}
+
+.leaflet-popup-content {
+  color: var(--blue);
+  font-size: 14px;
+  text-transform: lowercase;
+}
+
+.popup-container button,
+.popup-container input,
+.popup-container select,
+.popup-container textarea {
+  font-family: "Courier Prime", "Courier New", monospace !important;
+}
+
+@media (max-width: 700px) {
+  #info-panel {
+    width: 80vw;
+    height: 60vh;
+    position: absolute;
+    top: 20vh;
+    left: 10vw;
+    z-index: 9999;
+    border: 2px dotted var(--blue);
+    box-shadow: 4px 4px 0 var(--highlight);
   }
-  .popup-form label {
-    font-weight: bold;
-    margin-top: 4px;
+
+  #info-box {
+    max-height: 100%;
   }
-  .popup-form input,
-  .popup-form select,
-  .popup-form textarea {
-    width: 100%;
-    box-sizing: border-box;
-    padding: 3px;
-  }
-  .popup-form button {
-    margin-top: 6px;
-    padding: 4px;
-    cursor: pointer;
-  }
+}
 </style>
 
+
 <body>
-  <div id="map"></div>
+  <div id="map-wrapper">
+    <div id="info-panel">
+      <button id="toggle-info">←</button>
+      <div id="info-box">
+        <img src="IMG_1775.JPG" alt="McGill Microwave Map" class="title-image">
+        <div id="nav-buttons">
+          <button class="nav-btn" id="nav-submit">SUBMIT</button>
+          <button class="nav-btn" id="nav-display">DISPLAY</button>
+        </div>
+
+        <p class="intro">
+          this interactive map seeks to document every 
+          <span class="highlight">accessible microwave</span> 
+          on campus.
+        </p>
+
+        <p class="instruction">
+          click a building on the "SUBMIT" map to 
+          <span class="highlight">add a location</span>. look around on the "DISPLAY" map to 
+          <span class="highlight">check 'em out</span>.
+        </p>
+
+        <p class="instruction">
+          data collected here will support a future analysis using arcgis,  
+          including <span class="highlight">location allocation</span> and 
+          <span class="highlight">hotspot mapping</span> based on building capacity and use.
+        </p>
+
+        <p class="goal">
+          by: charlotte alarie 
+        </p>
+</div>
+    </div>
+    <div id="map"></div>
+  </div>
+  <script src="https://unpkg.com/leaflet-labeltextcollision/leaflet-labeltextcollision.js"></script>
+  <script src="submit-geojson.js"></script>
   <script src="submit-script.js"></script>
 </body>
-
-</html>
 
 </html>
