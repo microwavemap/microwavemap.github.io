@@ -86,14 +86,12 @@ body {
   overflow: hidden;
 }
 
-/* collapsed state */
 #info-panel.collapsed {
   width: 37.5px;
   height: 42.5px;
   transition: all 0.3s ease;
 }
 
-/* toggle button */
 #toggle-info {
   position: absolute;
   top: 10px;
@@ -116,13 +114,12 @@ body {
   color: var(--highlight);
 }
 
-/* info box content */
 #info-box {
   padding: 16px;
   line-height: 1.5;
   transition: opacity 0.3s ease;
-  overflow-y: auto;          /* enables scrolling */
-  max-height: 100%;          /* fits within panel */
+  overflow-y: auto;   
+  max-height: 100%;      
   scrollbar-width: 1px;
   scrollbar-color: var(--blue) #ffffff;
 }
@@ -151,13 +148,11 @@ body {
   margin-top: 10px;
 }
 
-/* instruction section — subtle yellow highlight background */
 #info-box p.instruction {
   padding: 4px;
 }
 
-/* goal section — italic and larger text */
-#info-box p.goal {
+ #info-box p.goal {
   font-size: 14px;
   color: var(--blue);
   margin-top: 12px;
@@ -325,7 +320,6 @@ body, button, input, select, textarea, .leaflet-container, .leaflet-popup-conten
 }
 </style>
 
-
 <body>
   <div id="map-wrapper">
     <div id="info-panel">
@@ -358,7 +352,7 @@ body, button, input, select, textarea, .leaflet-container, .leaflet-popup-conten
         <p class="goal">
           by: charlotte alarie 
         </p>
-</div>
+      </div>
     </div>
     <div id="map"></div>
   </div>
