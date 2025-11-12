@@ -59,9 +59,6 @@ function showFormPopup(latlng, buildingName) {
     alert("thank you for your submission!");
   };
 
-  ////////////////////////////////////////////////////////
-
-  // Google Form submission
   function sendToForm(building, quantity, lat, lng, floor, room, key, note) {
     const formUrl = "https://docs.google.com/forms/d/e/1FAIpQLSd7BytKb1cbf58J6FDiDgCjjtC_anb3bjEikBL79BvE14jnXg/formResponse";
     const formData = new URLSearchParams();
