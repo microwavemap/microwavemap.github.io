@@ -14,20 +14,20 @@ function showFormPopup(latlng, buildingName) {
   const popupForm = `
     <div class="popup-container">
       <h3>${buildingName}</h3>
-      <label>number of microwaves*:</label>
+      <label># of microwaves:</label>
       <input id="microwave-qty" type="number" min="0" step="1">
 
-      <label>floor number*:</label>
+      <label>floor number:</label>
       <input id="floor" type="number">
 
-      <label>room name + number*:</label>
+      <label>room name + number:</label>
       <input id="room" type="text">
 
       <label>key card restriction:</label>
       <select id="key">
-        <option value="">select...</option>
-        <option value="restricted">restricted</option>
-        <option value="unrestricted">unrestricted</option>
+        <option value="">Select...</option>
+        <option value="restricted">Restricted</option>
+        <option value="unrestricted">Unrestricted</option>
       </select>
 
       <label>notes:</label>
@@ -87,10 +87,18 @@ function showFormPopup(latlng, buildingName) {
     style: { color: "#0000ff", weight: 2, opacity: 0.9, dashArray: "1, 5" }
   }).addTo(map);
 
-const panel = document.getElementById("info-panel");
-const toggleBtn = document.getElementById("toggle-info");
+    const panel = document.getElementById("info-panel");
+    const toggleBtn = document.getElementById("toggle-info");
 
-toggleBtn.addEventListener("click", () => {
-  panel.classList.toggle("collapsed");
-  toggleBtn.textContent = panel.classList.contains("collapsed") ? ">" : "<";;
-});
+    toggleBtn.addEventListener("click", () => {
+      panel.classList.toggle("collapsed");
+      toggleBtn.textContent = panel.classList.contains("collapsed") ? ">" : "<";;
+    });
+
+    document.getElementById("nav-submit").addEventListener("click", () => {
+      window.location.href = "index.html";
+    });
+
+    document.getElementById("nav-display").addEventListener("click", () => {
+      window.location.href = "display.html";
+    });
