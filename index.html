@@ -319,6 +319,16 @@ body, button, input, select, textarea, .leaflet-container, .leaflet-popup-conten
     max-height: 100%;
   }
 }
+
+.email-link:visited,
+.email-link:hover, {
+  background: var(--blue);
+  color: #fff;
+}
+ 
+.email-link, {
+  color: var(--blue);
+}
 </style>
 
 <body>
@@ -351,7 +361,7 @@ body, button, input, select, textarea, .leaflet-container, .leaflet-popup-conten
          this map is part of the final project for class GEOG 414. contributed data supports spatial analysis of microwaves (more features to come).
         </p>
 
-        <p class="goal">if you have questions, <a href="mailto:charlotte.alarie@mail.mcgill.ca">email me!</a></p>
+        <p class="goal">if you have questions, <a class="email-link" href="mailto:charlotte.alarie@mail.mcgill.ca">email me!</a></p>
       </div>
     </div>
     <div id="map"></div>
