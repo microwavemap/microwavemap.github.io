@@ -52,6 +52,14 @@
       }
     });
 
+    const panel = document.getElementById("info-panel");
+    const toggleBtn = document.getElementById("toggle-info");
+
+    toggleBtn.addEventListener("click", () => {
+      panel.classList.toggle("collapsed");
+      toggleBtn.textContent = panel.classList.contains("collapsed") ? ">" : "<";;
+    });
+
     document.getElementById("nav-submit").addEventListener("click", () => {
       window.location.href = "index.html";
     });
