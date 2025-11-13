@@ -18,7 +18,7 @@ function showFormPopup(latlng, buildingName) {
       <input id="microwave-qty" type="number" min="0" step="1">
 
       <label>floor number:</label>
-      <input id="floor" type="text">
+      <input id="floor" type="number">
 
       <label>room name + number:</label>
       <input id="room" type="text">
