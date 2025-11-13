@@ -92,5 +92,5 @@ const toggleBtn = document.getElementById("toggle-info");
 
 toggleBtn.addEventListener("click", () => {
   panel.classList.toggle("collapsed");
-  toggleBtn.textContent = panel.classList.contains("collapsed") ? "→" : "←";
+  toggleBtn.textContent = panel.classList.contains("collapsed") ? ">" : "<";;
 });
