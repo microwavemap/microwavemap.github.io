@@ -52,6 +52,17 @@
       }
     });
 
+    L.geoJSON(geojsonFeature, {
+    onEachFeature: function (feature, layer) {
+      layer.on('click', function (e) {
+        const buildingName = feature.properties.Name || feature.properties.name || "Unknown";
+        showFormPopup(e.latlng, buildingName);
+      });
+    },
+
+    style: { color: "#0000ff", weight: 2, opacity: 0.9, dashArray: "1, 5" }
+  }).addTo(map);
+
     const panel = document.getElementById("info-panel");
     const toggleBtn = document.getElementById("toggle-info");
 
@@ -64,6 +75,9 @@
       window.location.href = "index.html";
     });
 
+    document.getElementById("nav-display").addEventListener("click", () => {
+      window.location.href = "display.html";
+    });
     document.getElementById("nav-display").addEventListener("click", () => {
       window.location.href = "display.html";
     });
