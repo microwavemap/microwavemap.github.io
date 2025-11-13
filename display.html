@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>mcgill microwave map - submit</title>
+<title>mcgill microwave map - explore</title>
 <link rel="icon" type="image/x-icon" href="microwave_favicon.jpg">
 <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -367,6 +367,16 @@ body, button, input, select, textarea, .leaflet-container, .leaflet-popup-conten
   color: white;
 }
 
+.display-popup {
+  background: white; 
+  border: 2px dotted var(--blue);
+  padding: 10px 12px;
+  font-size: 12px;
+  line-height: 1.3;
+  color: var(--blue);
+  max-width: 180px; 
+}
+
 </style>
 
 <body>
@@ -377,7 +387,7 @@ body, button, input, select, textarea, .leaflet-container, .leaflet-popup-conten
         <img src="IMG_1775.JPG" alt="mcgill microwave map" class="title-image">
          <div id="nav-buttons">
           <button class="nav-btn" id="nav-submit">SUBMIT</button>
-          <button class="nav-btn" id="nav-display">DISPLAY</button>
+          <button class="nav-btn" id="nav-display">EXPLORE</button>
         </div>
 
         <p class="intro">
@@ -391,7 +401,7 @@ body, button, input, select, textarea, .leaflet-container, .leaflet-popup-conten
         </p>
 
         <p class="instruction">
-          take a look around to check out user-submitted microwave spots! contributions are reviewed before publishing.
+          take a look around to check out user-submitted microwave spots!
         </p>
 
         <p class="instruction">
