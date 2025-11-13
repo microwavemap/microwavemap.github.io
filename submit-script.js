@@ -14,13 +14,13 @@ function showFormPopup(latlng, buildingName) {
   const popupForm = `
     <div class="popup-container">
       <h3>${buildingName}</h3>
-      <label># of microwaves:</label>
-      <input id="microwave-qty" type="number" min="0" step="1">
+      <label># of microwaves*:</label>
+      <input id="microwave-qty" type="text" min="0" step="1">
 
-      <label>floor number:</label>
-      <input id="floor" type="number">
+      <label>floor number*:</label>
+      <input id="floor" type="text">
 
-      <label>room name + number:</label>
+      <label>room name + number*:</label>
       <input id="room" type="text">
 
       <label>key card restriction:</label>
@@ -31,7 +31,7 @@ function showFormPopup(latlng, buildingName) {
       </select>
 
       <label>notes:</label>
-      <textarea id="note" rows="2"></textarea>
+      <textarea id="note" rows="2" type="text"></textarea>
 
       <button onclick="submitMicrowaveData(${latlng.lat}, ${latlng.lng}, '${buildingName.replace(/'/g, "\\'")}')">Submit</button>
     </div>
