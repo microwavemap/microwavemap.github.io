@@ -45,10 +45,10 @@
 
         console.log("Markers added:", count);
         if (count > 0) map.fitBounds(group.getBounds(), { padding: [20, 20] });
-        else console.warn("Parsed rows, but no valid lat/long found.");
+        else console.warn("parsed rows, but no valid lat/long found.");
       },
       error: (err) => {
-        console.error("Papa parse error:", err);
+        console.error("PAPA PARSE ERROR:", err);
       }
     });
 
@@ -75,9 +75,6 @@
       window.location.href = "index.html";
     });
 
-    document.getElementById("nav-display").addEventListener("click", () => {
-      window.location.href = "display.html";
-    });
     document.getElementById("nav-display").addEventListener("click", () => {
       window.location.href = "display.html";
     });
