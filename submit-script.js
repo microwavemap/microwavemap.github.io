@@ -25,9 +25,9 @@ function showFormPopup(latlng, buildingName) {
 
       <label>key card restriction:</label>
       <select id="key">
-        <option value="">Select...</option>
-        <option value="restricted">Restricted</option>
-        <option value="unrestricted">Unrestricted</option>
+        <option value="">select...</option>
+        <option value="restricted">restricted</option>
+        <option value="unrestricted">unrestricted</option>
       </select>
 
       <label>notes:</label>
