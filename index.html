@@ -65,7 +65,6 @@ body {
 
 #map-wrapper {
   display: flex;
-  align-items: stretch;
   justify-content: flex-start;
   width: 90vw;
   height: 90vh;
@@ -88,8 +87,8 @@ body {
 }
 
 #info-panel.collapsed {
-  width: 37.5px;
-  height: 42.5px;
+  width: 42.5px;
+  height: 47.5px;
   transition: all 0.3s ease;
 }
 
@@ -101,19 +100,54 @@ body {
   background: var(--highlight);
   color: var(--blue);
   font-family: var(--font);
-  width: 24px;
-  height: 24px;
+  font-weight: 700;
+  width: 30px;
+  height: 30px;
   cursor: pointer;
-  font-weight: bold;
   text-align: center;
-  line-height: 20px;
   z-index: 10;
+  radius: 0;
 }
 
 #toggle-info:hover {
   background: var(--blue);
-  color: var(--highlight);
+  color: white;
 }
+
+.leaflet-control-zoom,
+.leaflet-control-zoom a {
+  border: none !important;
+  box-shadow: none !important;
+  background: var(--highlight) !important;
+  color: var(--blue) !important;
+  border-radius: 0 !important;
+
+}
+
+.leaflet-control-zoom {
+  border: 2.5px solid var(--blue) !important;
+  overflow: hidden;
+  transform: none;
+  border-radius: 0 !important;
+}
+
+.leaflet-control-zoom a {
+  width: 28px !important;
+  height: 28px !important;
+  line-height: 28px !important;
+  font-size: 20px !important;
+  border-radius: 0 !important;
+
+}
+
+.leaflet-control-zoom a:hover {
+  background: var(--blue) !important;
+  color: white !important;
+  box-shadow: 8 8 8px var(--blue);
+  position: relative;
+  z-index: 1000;
+}
+
 
 #info-box {
   padding: 16px;
@@ -184,10 +218,6 @@ body {
   border: 2px dotted var(--blue);
   background: #fff;
   transition: flex 0.3s ease;
-}
-
-.leaflet-control-zoom {
-  transform: scale(0.75) translate(0px, 5px);
 }
  
 .popup-container {
@@ -324,15 +354,18 @@ body, button, input, select, textarea, .leaflet-container, .leaflet-popup-conten
   }
 }
 
-.email-link:visited,
-.email-link:hover, {
-  background: var(--blue);
-  color: #fff;
-}
- 
-.email-link, {
+.email-button,
+.email-button:visited {
   color: var(--blue);
+  text-decoration: none;
+  display: inline-block;
 }
+
+.email-button:hover {
+  background-color: var(--blue);
+  color: white;
+}
+
 </style>
 
 <body>
@@ -354,18 +387,18 @@ body, button, input, select, textarea, .leaflet-container, .leaflet-popup-conten
 
         <p class="instruction">
           click a building to 
-          add a location.
+          log a microwave location!
         </p>
 
         <p class="instruction">
-         please fill out the fields (fields marked with * are required), and be truthful! feel free to share a microwave fact / story in the note.
+         please fill out the fields (* are required fields), and be truthful! feel free to share a microwave fact / story in the note.
         </p>
 
         <p class="instruction">
-         this map is part of the final project for class GEOG 414. contributed data supports spatial analysis of microwaves. more features to come.
+         this map is part of the final project for class GEOG 414. contributed data supports further spatial analysis of microwaves. more features on this site to come.
         </p>
 
-        <p class="goal">questions? <a class="email-link" href="mailto:charlotte.alarie@mail.mcgill.ca">email me!</a></p>
+        <p class="goal">questions? <a class="email-button" href="mailto:charlotte.alarie@mail.mcgill.ca">email me!</a></p>
       </div>
     </div>
     <div id="map"></div>
