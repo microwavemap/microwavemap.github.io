@@ -43,8 +43,8 @@
               <div class="display-popup">
                 <b>${building}</b><br>
                 ${quantity} microwave(s)<br>
-                floor #: ${floor}<br>
-                room #: ${room}
+                floor ${floor}<br>
+                ${room}
               </div>
             `;
 
