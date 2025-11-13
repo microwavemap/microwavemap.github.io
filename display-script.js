@@ -60,7 +60,7 @@
           }
         });
 
-        console.log("Markers added:", count);
+        console.log("markers added:", count);
         if (count > 0) map.fitBounds(group.getBounds(), { padding: [20, 20] });
         else console.warn("parsed rows, but no valid lat/long found.");
       },
