@@ -14,6 +14,18 @@
 
     const group = L.featureGroup().addTo(map);
 
+    /*const testPopup = `
+      <div class="display-popup">
+        <b>test building</b><br>
+        2 microwave(s)<br>
+        room #: 312
+      </div>
+    `;
+
+    L.marker([45.5048, -73.5769])
+      .bindPopup(testPopup)
+      .addTo(group);*/
+
     Papa.parse(sheetURL, {
       download: true,
       header: true,
@@ -34,21 +46,25 @@
 
           if (Number.isFinite(lat) && Number.isFinite(lng)) {
 
-            const quantity = row.quantity || 'Unknown';
-            const building = row.building || 'Unknown';
-            const room = row.room || 'Unknown';
+            const building = row.building || '';
+            const quantity = row.quantity || '';
+            const floor = row.floor || '';
+            const room = row.room || '';
 
             const popupHTML = `
-              <b>${building}</b><br>
-              ${quantity} microwave(s) logged in room ${room}
+              <div class="display-popup">
+                <b>${building}</b><br>
+                ${quantity} microwave(s)<br>
+                room #: ${room}
+              </div>
             `;
 
             const m = L.circleMarker([lat, lng], {
-              radius: 7,
+              radius: 4,
               weight: 1,
               fillOpacity: 0.9,
               color: '#fff933',
-              fillColor: '#fff933'
+              fillColor: '#0000ff'
             }).bindPopup(popupHTML);
 
             m.addTo(group);
@@ -85,10 +101,6 @@
 
     document.getElementById("nav-submit").addEventListener("click", () => {
       window.location.href = "index.html";
-    });
-
-    document.getElementById("nav-display").addEventListener("click", () => {
-      window.location.href = "display.html";
     });
 
     document.getElementById("nav-display").addEventListener("click", () => {
