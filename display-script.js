@@ -33,13 +33,25 @@
           const lng = parseFloat(row.long);
 
           if (Number.isFinite(lat) && Number.isFinite(lng)) {
+
+            const quantity = row.quantity || 'Unknown';
+            const building = row.building || 'Unknown';
+            const room = row.room || 'Unknown';
+
+            const popupHTML = `
+              <b>${building}</b><br>
+              ${quantity} microwave(s) logged in room ${room}
+            `;
+
             const m = L.circleMarker([lat, lng], {
               radius: 7,
               weight: 1,
-              fillOpacity: 0.9
-            }).bindPopup(`Lat: ${lat}<br>Lng: ${lng}`);
+              fillOpacity: 0.9,
+              color: '#fff933',
+              fillColor: '#fff933'
+            }).bindPopup(popupHTML);
+
             m.addTo(group);
-            count++;
           }
         });
 
@@ -48,7 +60,7 @@
         else console.warn("parsed rows, but no valid lat/long found.");
       },
       error: (err) => {
-        console.error("PAPA PARSE ERROR:", err);
+        console.error("papa parse error:", err);
       }
     });
 
@@ -73,6 +85,10 @@
 
     document.getElementById("nav-submit").addEventListener("click", () => {
       window.location.href = "index.html";
+    });
+
+    document.getElementById("nav-display").addEventListener("click", () => {
+      window.location.href = "display.html";
     });
 
     document.getElementById("nav-display").addEventListener("click", () => {
