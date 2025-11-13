@@ -14,13 +14,13 @@ function showFormPopup(latlng, buildingName) {
   const popupForm = `
     <div class="popup-container">
       <h3>${buildingName}</h3>
-      <label># of microwaves:</label>
+      <label>number of microwaves*:</label>
       <input id="microwave-qty" type="number" min="0" step="1">
 
-      <label>floor number:</label>
+      <label>floor number*:</label>
       <input id="floor" type="number">
 
-      <label>room name + number:</label>
+      <label>room name + number*:</label>
       <input id="room" type="text">
 
       <label>key card restriction:</label>
