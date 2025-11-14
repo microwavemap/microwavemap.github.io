@@ -57,8 +57,8 @@
               <div class="display-popup">
                 <b>${building}</b><br>
                 ${quantity} microwave(s)<br>
-                room #: ${room}
-                note: ${row.note}
+                room #: ${room}<br>
+                note: ${row.note}<br>
                 contributed by: ${row.contributor}
               </div>
             `;
@@ -66,9 +66,9 @@
             const m = L.circleMarker([lat, lng], {
               radius: 4,
               weight: 1,
-              fillOpacity: 0.9,
+              fillOpacity: 1,
               color: '#fff933',
-              fillColor: '#0000ff'
+              fillColor: '#fff933'
             }).bindPopup(popupHTML);
 
             m.addTo(group);
