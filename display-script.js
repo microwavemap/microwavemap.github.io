@@ -14,6 +14,18 @@
 
     const group = L.featureGroup().addTo(map);
 
+    /*const testPopup = `
+      <div class="display-popup">
+        <b>test building</b><br>
+        2 microwave(s)<br>
+        room #: 312
+      </div>
+    `;
+
+    L.marker([45.5048, -73.5769])
+      .bindPopup(testPopup)
+      .addTo(group);*/
+
     Papa.parse(sheetURL, {
       download: true,
       header: true,
@@ -38,29 +50,32 @@
             const quantity = row.quantity || '';
             const floor = row.floor || '';
             const room = row.room || '';
+            const note = row.note || '';
+            const contributor =  row.contributor || '';
 
             const popupHTML = `
               <div class="display-popup">
                 <b>${building}</b><br>
                 ${quantity} microwave(s)<br>
-                floor ${floor}<br>
-                ${room}
+                room #: ${room}
+                note: ${row.note}
+                contributed by: ${row.contributor}
               </div>
             `;
 
             const m = L.circleMarker([lat, lng], {
-              radius: 5,
+              radius: 4,
               weight: 1,
-              fillOpacity: 1,
+              fillOpacity: 0.9,
               color: '#fff933',
-              fillColor: '#fff933'
+              fillColor: '#0000ff'
             }).bindPopup(popupHTML);
 
             m.addTo(group);
           }
         });
 
-        console.log("markers added:", count);
+        console.log("Markers added:", count);
         if (count > 0) map.fitBounds(group.getBounds(), { padding: [20, 20] });
         else console.warn("parsed rows, but no valid lat/long found.");
       },
