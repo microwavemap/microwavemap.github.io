@@ -33,6 +33,9 @@ function showFormPopup(latlng, buildingName) {
       <label>notes:</label>
       <textarea id="note" rows="2" type="text"></textarea>
 
+      <label>contributor name:</label>
+      <input id="contributor" type="text">
+
       <button onclick="submitMicrowaveData(${latlng.lat}, ${latlng.lng}, '${buildingName.replace(/'/g, "\\'")}')">Submit</button>
     </div>
   `;
@@ -48,18 +51,20 @@ function showFormPopup(latlng, buildingName) {
     const room = document.getElementById('room').value.trim();
     const key = document.getElementById('key').value.trim();
     const note = document.getElementById('note').value.trim();
+    const contributor = document.getElementById('contributor').value.trim();
+
 
     if (!quantity || !floor || !room) {
       alert("fill out all required fields!");
       return;
     }
 
-    sendToForm(buildingName, quantity, lat, lng, floor, room, key, note);
+    sendToForm(buildingName, quantity, lat, lng, floor, room, key, note, contributor);
     map.closePopup();
     alert("thank you for your submission!");
   };
 
-  function sendToForm(building, quantity, lat, lng, floor, room, key, note) {
+  function sendToForm(building, quantity, lat, lng, floor, room, key, note, contributor) {
     const formUrl = "https://docs.google.com/forms/d/e/1FAIpQLSd7BytKb1cbf58J6FDiDgCjjtC_anb3bjEikBL79BvE14jnXg/formResponse";
     const formData = new URLSearchParams();
     formData.append("entry.1537829160", building);
@@ -70,6 +75,8 @@ function showFormPopup(latlng, buildingName) {
     formData.append("entry.933589728", room);
     formData.append("entry.1801280110", key);
     formData.append("entry.179601343", note);
+    formData.append("entry.2066704409", contributor);
+
 
     fetch(formUrl, { method: "POST", mode: "no-cors", body: formData })
       .then(() => console.log("Attempted to send"))
