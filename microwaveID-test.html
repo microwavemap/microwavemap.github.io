@@ -534,64 +534,80 @@ body, button, input, select, textarea, .leaflet-container, .leaflet-popup-conten
       });
     });
 
-    Object.values(microwaves).forEach(m => {
-      if (!Number.isFinite(m.lat) || !Number.isFinite(m.lng)) return;
+Object.values(microwaves).forEach(m => {
+  if (!Number.isFinite(m.lat) || !Number.isFinite(m.lng)) return;
 
-      const wrapper = document.createElement("div");
-      wrapper.className = "mw-popup-wrapper";
-      L.DomEvent.disableClickPropagation(wrapper);
-      L.DomEvent.disableScrollPropagation(wrapper);
+  const wrapper = document.createElement("div");
+  wrapper.className = "mw-popup-wrapper";
 
-      let index = 0;
+  L.DomEvent.disableClickPropagation(wrapper);
+  L.DomEvent.disableScrollPropagation(wrapper);
 
-      function updatePopup() {
-        const log = m.logs[index];
+  let index = 0;
 
-        wrapper.innerHTML = `
-          <div class="display-popup">
-            <p><b style="text-transform:uppercase;">${m.building}</b></p>
+  function updatePopup() {
+    const log = m.logs[index];
 
-            <hr>
+    wrapper.innerHTML = `
+      <div class="display-popup">
+        <p><b style="text-transform:uppercase;">${m.building}</b></p>
 
-            <p><b>microwave(s):</b> ${log.quantity}</p>
-            <p><b>floor #:</b> ${log.floor}</p>
-            <p><b>room #:</b> ${log.room}</p>
-            <p><b>access:</b> ${log.key}</p>
-            <p><b>rating:</b> ${log.rating || "-"} / 5</p>
-            <p><b>note:</b> ${log.note || "-"}</p>
-            <p><b>contributed by:</b> ${log.contributor || "-"}</p>
+        <hr>
 
-            <hr>
+        <p><b>microwave(s):</b> ${log.quantity}</p>
+        <p><b>floor #:</b> ${log.floor}</p>
+        <p><b>room #:</b> ${log.room}</p>
+        <p><b>access:</b> ${log.key}</p>
+        <p><b>rating:</b> ${log.rating || "-"} / 5</p>
+        <p><b>note:</b> ${log.note || "-"}</p>
+        <p><b>contributed by:</b> ${log.contributor || "-"}</p>
 
-            <p><b>entry:</b> ${index + 1} / ${m.logs.length}</p>
+        <hr>
 
-            ${m.logs.length > 1 ? `
-              <div class="log-nav">
-                <button id="prevLog"><</button>
-                <button id="nextLog">></button>
-              </div>
-            ` : ""}
+        <p><b>entry:</b> ${index + 1} / ${m.logs.length}</p>
+
+        ${m.logs.length > 1 ? `
+          <div class="log-nav">
+            <button id="prevLog"><</button>
+            <button id="nextLog">></button>
           </div>
-        `;
-      }
-      
-      const inner = wrapper.querySelector(".display-popup");
+        ` : ""}
+      </div>
+    `;
+
+    const inner = wrapper.querySelector(".display-popup");
+    if (inner) {
       L.DomEvent.disableClickPropagation(inner);
-      
+      L.DomEvent.disableScrollPropagation(inner);
+    }
+  }
+
+  updatePopup();
+
+  wrapper.addEventListener("click", e => {
+    if (e.target.id === "prevLog") {
+      index = (index - 1 + m.logs.length) % m.logs.length;
       updatePopup();
+    }
+    if (e.target.id === "nextLog") {
+      index = (index + 1) % m.logs.length;
+      updatePopup();
+    }
+  });
 
-      const marker = L.circleMarker([m.lat, m.lng], {
-        radius: 4,
-        weight: 1,
-        fillOpacity: 1,
-        color: '#fff933',
-        fillColor: '#fff933'
-      }).addTo(group);
+  const marker = L.circleMarker([m.lat, m.lng], {
+    radius: 4,
+    weight: 1,
+    fillOpacity: 1,
+    color: '#fff933',
+    fillColor: '#fff933'
+  }).addTo(group);
 
-      marker.bindPopup(wrapper, {
-        closeOnClick: false,
-        autoClose: false
-      });
+  marker.bindPopup(wrapper, {
+    closeOnClick: false,
+    autoClose: false
+  });
+});
 
       marker.on("popupopen", () => {
         wrapper.addEventListener("click", function (e) {
