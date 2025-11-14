@@ -55,11 +55,11 @@
 
             const popupHTML = `
               <div class="display-popup">
-                <b>${building}</b><br>
-                ${quantity} microwave(s)<br>
-                room #: ${room}<br>
-                note: ${row.note}<br>
-                contributed by: ${row.contributor}
+                <p><b>${building}</b></p>
+                <p>${quantity} microwave(s)</p>
+                <p>room #: ${room}</p>
+                <p>note: ${note}</p>
+                <p>contributed by: ${contributor}</p>
               </div>
             `;
 
