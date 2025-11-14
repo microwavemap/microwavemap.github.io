@@ -574,7 +574,10 @@ body, button, input, select, textarea, .leaflet-container, .leaflet-popup-conten
           </div>
         `;
       }
-
+      
+      const inner = wrapper.querySelector(".display-popup");
+      L.DomEvent.disableClickPropagation(inner);
+      
       updatePopup();
 
       const marker = L.circleMarker([m.lat, m.lng], {
@@ -588,17 +591,22 @@ body, button, input, select, textarea, .leaflet-container, .leaflet-popup-conten
       marker.bindPopup(wrapper);
 
       marker.on("popupopen", () => {
-        wrapper.onclick = (e) => {
+        wrapper.addEventListener("click", function (e) {
+          e.stopPropagation(); 
           if (e.target.id === "prevLog") {
             index = (index - 1 + m.logs.length) % m.logs.length;
             updatePopup();
-          } else if (e.target.id === "nextLog") {
+            const inner = wrapper.querySelector(".display-popup");
+            if (inner) L.DomEvent.disableClickPropagation(inner);
+          }
+          if (e.target.id === "nextLog") {
             index = (index + 1) % m.logs.length;
             updatePopup();
+            const inner = wrapper.querySelector(".display-popup");
+            if (inner) L.DomEvent.disableClickPropagation(inner);
           }
-        };
+        });
       });
-    });
 
         const counts = {};
         data.forEach(r => {
