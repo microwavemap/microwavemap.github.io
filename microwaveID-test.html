@@ -526,7 +526,7 @@ body, button, input, select, textarea, .leaflet-container, .leaflet-popup-conten
       if (!Number.isFinite(m.lat) || !Number.isFinite(m.lng)) return;
 
       const wrapper = document.createElement("div");
-      wrapper.style.maxHeight = "220px";
+      wrapper.style.maxHeight = "500px";
       wrapper.style.overflowY = "auto";
 
       let index = 0;
@@ -535,7 +535,7 @@ body, button, input, select, textarea, .leaflet-container, .leaflet-popup-conten
         const log = m.logs[index];
 
         wrapper.innerHTML = `
-          <div class="display-popup" style="max-width:220px;">
+          <div class="display-popup" style="max-width:320px;">
             <p><b style="text-transform:uppercase;">${m.building}</b></p>
 
             <p><b>ID:</b> ${m.id}</p>
