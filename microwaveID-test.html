@@ -416,6 +416,12 @@ body, button, input, select, textarea, .leaflet-container, .leaflet-popup-conten
  overflow-y: visible;
 }
 
+.display-popup hr {
+  border: none;
+  border-top: 2px dotted var(--blue);
+  margin: 10px 0;
+}
+ 
 </style>
 
 <body>
@@ -546,7 +552,6 @@ body, button, input, select, textarea, .leaflet-container, .leaflet-popup-conten
           <div class="display-popup">
             <p><b style="text-transform:uppercase;">${m.building}</b></p>
 
-            <p><b>ID:</b> ${m.id}</p>
             <p><b>entry:</b> ${index + 1} / ${m.logs.length}</p>
 
             <hr>
