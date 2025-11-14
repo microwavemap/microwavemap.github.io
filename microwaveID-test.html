@@ -329,6 +329,8 @@ body, button, input, select, textarea, .leaflet-container, .leaflet-popup-conten
   color: var(--blue);
   font-size: 14px;
   text-transform: lowercase;
+  width: 300px !important;
+  max-width: 300px !important;
 }
 
 .popup-container button,
@@ -374,7 +376,8 @@ body, button, input, select, textarea, .leaflet-container, .leaflet-popup-conten
   font-size: 12px;
   line-height: 1.3;
   color: var(--blue);
-  max-width: 180px; 
+  max-width: 300px; 
+  width: 300px; 
 }
 
  .display-popup p {
@@ -540,7 +543,7 @@ body, button, input, select, textarea, .leaflet-container, .leaflet-popup-conten
         const log = m.logs[index];
 
         wrapper.innerHTML = `
-          <div class="display-popup" style="max-width:320px;">
+          <div class="display-popup">
             <p><b style="text-transform:uppercase;">${m.building}</b></p>
 
             <p><b>ID:</b> ${m.id}</p>
