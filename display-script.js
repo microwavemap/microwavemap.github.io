@@ -77,13 +77,16 @@
 
         const counts = {};
         data.forEach(r => {
-        if (r.contributor && r.contributor.trim() !== "?") {
-          counts[r.contributor] = (counts[r.contributor] || 0) + 1;
-        }
+          if (r.contributor && r.contributor.trim() !== "?") {
+            const qty = Number(r.quantity) || 0;
+            counts[r.contributor] = (counts[r.contributor] || 0) + qty;
+          }
         });
-        
-        const top = Object.entries(counts).sort((a, b) => b[1] - a[1])[0]?.[0] || "";
-        document.getElementById("top-contributor").textContent = top;
+        const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+        const topName = sorted[0]?.[0] || "";
+        const topTotal = sorted[0]?.[1] || 0;
+        document.getElementById("top-contributor-name").textContent = topName;
+        document.getElementById("top-contributor-total").textContent = topTotal;
 
         console.log("Markers added:", count);
         if (count > 0) map.fitBounds(group.getBounds(), { padding: [20, 20] });
