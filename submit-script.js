@@ -30,6 +30,15 @@ function showFormPopup(latlng, buildingName) {
         <option value="unrestricted">unrestricted</option>
       </select>
 
+      <label>star rating:</label>
+      <select id="rating">
+        <option value="1">1 ★</option>
+        <option value="2">2 ★★</option>
+        <option value="3">3 ★★★</option>
+        <option value="4">4 ★★★★</option>
+        <option value="5">5 ★★★★★</option>
+      </select>
+
       <label>notes:</label>
       <textarea id="note" rows="2" type="text"></textarea>
 
@@ -50,21 +59,21 @@ function showFormPopup(latlng, buildingName) {
     const floor = document.getElementById('floor').value.trim();
     const room = document.getElementById('room').value.trim();
     const key = document.getElementById('key').value.trim();
+    const rating = document.getElementById('rating').value.trim();
     const note = document.getElementById('note').value.trim();
     const contributor = document.getElementById('contributor').value.trim();
-
 
     if (!quantity || !floor || !room) {
       alert("fill out all required fields!");
       return;
     }
 
-    sendToForm(buildingName, quantity, lat, lng, floor, room, key, note, contributor);
+    sendToForm(buildingName, quantity, lat, lng, floor, room, key, rating, note, contributor);
     map.closePopup();
     alert("thank you for your submission!");
   };
 
-  function sendToForm(building, quantity, lat, lng, floor, room, key, note, contributor) {
+  function sendToForm(building, quantity, lat, lng, floor, room, key, rating, note, contributor) {
     const formUrl = "https://docs.google.com/forms/d/e/1FAIpQLSd7BytKb1cbf58J6FDiDgCjjtC_anb3bjEikBL79BvE14jnXg/formResponse";
     const formData = new URLSearchParams();
     formData.append("entry.1537829160", building);
@@ -74,6 +83,7 @@ function showFormPopup(latlng, buildingName) {
     formData.append("entry.1203711364", floor);
     formData.append("entry.933589728", room);
     formData.append("entry.1801280110", key);
+    formData.append("entry.1161890085", rating);
     formData.append("entry.179601343", note);
     formData.append("entry.2066704409", contributor);
 
