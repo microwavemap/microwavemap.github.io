@@ -50,7 +50,7 @@
             const quantity = row.quantity || '';
             const floor = row.floor || '';
             const room = row.room || '';
-            const note = row.note || '';
+            const note = row.note || '-';
             const contributor =  row.contributor || '';
 
             const popupHTML = `
