@@ -409,6 +409,12 @@ body, button, input, select, textarea, .leaflet-container, .leaflet-popup-conten
   color: #fff;
 }
 
+.mw-popup-wrapper {
+ max-height: 180px;
+ overflow-y: auto;
+ padding-right: 4px;
+}
+
 </style>
 
 <body>
@@ -526,8 +532,7 @@ body, button, input, select, textarea, .leaflet-container, .leaflet-popup-conten
       if (!Number.isFinite(m.lat) || !Number.isFinite(m.lng)) return;
 
       const wrapper = document.createElement("div");
-      wrapper.style.maxHeight = "500px";
-      wrapper.style.overflowY = "auto";
+      wrapper.className = "mw-popup-wrapper";
 
       let index = 0;
 
@@ -551,10 +556,12 @@ body, button, input, select, textarea, .leaflet-container, .leaflet-popup-conten
             <p><b>note:</b> ${log.note || "-"}</p>
             <p><b>contributed by:</b> ${log.contributor || "-"}</p>
 
-            <div class="log-nav">
-              <button id="prevLog"><</button>
-              <button id="nextLog">></button>
-            </div>
+            ${m.logs.length > 1 ? `
+              <div class="log-nav">
+                <button id="prevLog"><</button>
+                <button id="nextLog">></button>
+              </div>
+            ` : ""}
           </div>
         `;
       }
