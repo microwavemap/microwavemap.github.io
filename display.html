@@ -609,24 +609,6 @@ Object.values(microwaves).forEach(m => {
   });
 });
 
-      marker.on("popupopen", () => {
-        wrapper.addEventListener("click", function (e) {
-          e.stopPropagation(); 
-          if (e.target.id === "prevLog") {
-            index = (index - 1 + m.logs.length) % m.logs.length;
-            updatePopup();
-            const inner = wrapper.querySelector(".display-popup");
-            if (inner) L.DomEvent.disableClickPropagation(inner);
-          }
-          if (e.target.id === "nextLog") {
-            index = (index + 1) % m.logs.length;
-            updatePopup();
-            const inner = wrapper.querySelector(".display-popup");
-            if (inner) L.DomEvent.disableClickPropagation(inner);
-          }
-        });
-      });
-
         const counts = {};
         data.forEach(r => {
           if (r.contributor && r.contributor.trim() !== "?") {
