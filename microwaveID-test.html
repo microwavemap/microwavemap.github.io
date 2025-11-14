@@ -534,7 +534,6 @@ body, button, input, select, textarea, .leaflet-container, .leaflet-popup-conten
       });
     });
 
-    // 2. Render markers with navigation popups
     Object.values(microwaves).forEach(m => {
       if (!Number.isFinite(m.lat) || !Number.isFinite(m.lng)) return;
 
@@ -552,8 +551,6 @@ body, button, input, select, textarea, .leaflet-container, .leaflet-popup-conten
           <div class="display-popup">
             <p><b style="text-transform:uppercase;">${m.building}</b></p>
 
-            <p><b>entry:</b> ${index + 1} / ${m.logs.length}</p>
-
             <hr>
 
             <p><b>microwave(s):</b> ${log.quantity}</p>
@@ -563,6 +560,10 @@ body, button, input, select, textarea, .leaflet-container, .leaflet-popup-conten
             <p><b>rating:</b> ${log.rating || "-"} / 5</p>
             <p><b>note:</b> ${log.note || "-"}</p>
             <p><b>contributed by:</b> ${log.contributor || "-"}</p>
+
+            <hr>
+
+            <p><b>entry:</b> ${index + 1} / ${m.logs.length}</p>
 
             ${m.logs.length > 1 ? `
               <div class="log-nav">
