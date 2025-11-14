@@ -77,9 +77,9 @@
 
         const counts = {};
         data.forEach(r => {
-          if (r.contributor) {
-            counts[r.contributor] = (counts[r.contributor] || 0) + 1;
-          }
+        if (r.contributor && r.contributor.trim() !== "?") {
+          counts[r.contributor] = (counts[r.contributor] || 0) + 1;
+        }
         });
         
         const top = Object.entries(counts).sort((a, b) => b[1] - a[1])[0]?.[0] || "";
