@@ -534,6 +534,8 @@ body, button, input, select, textarea, .leaflet-container, .leaflet-popup-conten
 
       const wrapper = document.createElement("div");
       wrapper.className = "mw-popup-wrapper";
+      L.DomEvent.disableClickPropagation(wrapper);
+      L.DomEvent.disableScrollPropagation(wrapper);
 
       let index = 0;
 
