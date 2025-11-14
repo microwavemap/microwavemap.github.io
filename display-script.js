@@ -58,6 +58,7 @@
               <div class="display-popup">
                 <p><b style="text-transform: uppercase;">${building}</b></p>
                 <p><b>microwave(s):</b> ${quantity}</p>
+                <p><b>floor #:</b> ${floor}</p>
                 <p><b>room #:</b> ${room}</p>
                 <p><b>note:</b> ${note}</p>
                 <p><b>rating:</b> ${rating}/5</p>
