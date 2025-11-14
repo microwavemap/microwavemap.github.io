@@ -589,9 +589,9 @@ body, button, input, select, textarea, .leaflet-container, .leaflet-popup-conten
       }).addTo(group);
 
       marker.bindPopup(wrapper, {
-       closeOnClick: false,
-       autoClose: false;
-     });
+        closeOnClick: false,
+        autoClose: false
+      });
 
       marker.on("popupopen", () => {
         wrapper.addEventListener("click", function (e) {
