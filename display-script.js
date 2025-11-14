@@ -75,6 +75,16 @@
           }
         });
 
+        const counts = {};
+        data.forEach(r => {
+          if (r.contributor) {
+            counts[r.contributor] = (counts[r.contributor] || 0) + 1;
+          }
+        });
+        
+        const top = Object.entries(counts).sort((a, b) => b[1] - a[1])[0]?.[0] || "";
+        document.getElementById("top-contributor").textContent = top;
+
         console.log("Markers added:", count);
         if (count > 0) map.fitBounds(group.getBounds(), { padding: [20, 20] });
         else console.warn("parsed rows, but no valid lat/long found.");
