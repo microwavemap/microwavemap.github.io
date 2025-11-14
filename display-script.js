@@ -59,7 +59,7 @@
                 <p><b>microwave(s):</b> ${quantity}</p>
                 <p><b>room #:</b> ${room}</p>
                 <p><b>note:</b> ${note}</p>
-                <p><b>rating:</b> ${rating}</p>
+                <p><b>rating:</b> ${rating}/5</p>
                 <p><b>contributed by:</b> ${contributor}</p>
               </div>
             `;
