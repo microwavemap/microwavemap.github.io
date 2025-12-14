@@ -147,9 +147,9 @@
 rightContent.innerHTML = `
   <div>
     <p class="building-title">${esc(buildingName)}</p>
-    <p class="building-subtitle">${totalMicros} microwaveID(s), ${totalEntries} total log entr${totalEntries === 1 ? "y" : "ies"}</p>
+    <p class="building-subtitle">${totalMicros} unique microwave location logs, ${totalEntries} total log entr${totalEntries === 1 ? "y" : "ies"}</p>
     <hr>
-    ${cards || "<p>No microwaves logged for this building.</p>"}
+    ${cards || "<p>no microwaves logged for this building!</p>"}
   </div>
 `;
 
@@ -255,26 +255,19 @@ rightContent.innerHTML = `
         });
         microwavesByBuilding = byBuilding;
 
-        // Optional: keep point markers as a visual layer (no popups)
         Object.values(microwaves).forEach(m => {
           if (!Number.isFinite(m.lat) || !Number.isFinite(m.lng)) return;
 
-          const marker = L.circleMarker([m.lat, m.lng], {
+          L.circleMarker([m.lat, m.lng], {
             radius: 4,
             weight: 1,
             fillOpacity: 1,
-            color: '#0000ff',
-            fillColor: '#fff933'
+            color: "#0000ff",
+            fillColor: "#fff933",
+            interactive: false
           }).addTo(group);
-
-          // Optional shortcut: click marker => open that building in right panel
-          marker.on("click", () => {
-            const b = String(m.building || "").trim();
-            renderBuildingLogs(b || "Unknown", microwavesByBuilding[b] || []);
-          });
         });
 
-        // Top contributor calc
         const counts = {};
         data.forEach(r => {
           if (r.contributor && String(r.contributor).trim() !== "?") {
@@ -287,7 +280,6 @@ rightContent.innerHTML = `
         document.getElementById("top-contributor-name").textContent = sorted[0]?.[0] || "";
         document.getElementById("top-contributor-total").textContent = sorted[0]?.[1] || 0;
 
-        // Fit bounds to microwaves if present; otherwise fallback to your campus bounds
         if (group.getLayers().length > 0) {
           map.fitBounds(group.getBounds(), { padding: [20, 20] });
         } else {
@@ -297,9 +289,6 @@ rightContent.innerHTML = `
       error: (err) => console.error("papa parse error:", err)
     });
 
-    // ----------------------------
-    // Left panel + nav buttons
-    // ----------------------------
     const panel = document.getElementById("info-panel");
     const toggleBtn = document.getElementById("toggle-info");
 
