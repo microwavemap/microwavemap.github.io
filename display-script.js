@@ -14,18 +14,6 @@
 
     const group = L.featureGroup().addTo(map);
 
-    /*const testPopup = `
-      <div class="display-popup">
-        <b>test building</b><br>
-        2 microwave(s)<br>
-        room #: 312
-      </div>
-    `;
-
-    L.marker([45.5048, -73.5769])
-      .bindPopup(testPopup)
-      .addTo(group);*/
-
     Papa.parse(sheetURL, {
       download: true,
       header: true,
