@@ -22,44 +22,117 @@
 
   <link rel="stylesheet" href="style-display.css">
 
-  <!-- Added CSS for right panel + cards (you can move this into style-display.css) -->
   <style>
-    .right-panel{
-      position: fixed;
-      top: 0;
-      right: 0;
-      width: 340px;
-      height: 100vh;
-      background: #fff;
-      border-left: 1px solid #ddd;
-      overflow: auto;
-      z-index: 9999;
-      padding: 12px;
-      transition: transform 0.2s ease;
-    }
-    .right-panel.collapsed{ transform: translateX(340px); }
+/* ----------------------------
+   RIGHT PANEL (match left pane)
+   Put this in style-display.css
+   ---------------------------- */
 
-    #toggle-right{
-      position: absolute;
-      left: -28px;
-      top: 12px;
-      width: 28px;
-      height: 28px;
-      cursor: pointer;
-      border: 1px solid #ddd;
-      background: #fff;
-      border-radius: 6px;
-      font-family: inherit;
-    }
+/* Use the same typography as the rest of your UI */
+.right-panel{
+  position: fixed;
+  top: 0;
+  right: 0;
 
-    .mw-card{
-      border: 1px solid #eee;
-      border-radius: 10px;
-      padding: 10px;
-      margin: 10px 0;
-    }
-    .log-entry{ font-size: 0.95rem; }
-    .log-entry hr{ border: none; border-top: 1px solid #eee; margin: 10px 0; }
+  width: 360px;
+  height: 100vh;
+
+  background: #ffffff;
+  border-left: 2px solid #000;
+
+  font-family: "Courier Prime", monospace;
+  overflow: hidden;
+  z-index: 9999;
+
+  transition: transform 0.2s ease;
+}
+
+.right-panel.collapsed{
+  transform: translateX(360px);
+}
+
+/* Button that lives on the seam like the left toggle */
+#toggle-right{
+  position: absolute;
+  left: -32px;
+  top: 0;
+
+  width: 32px;
+  height: 32px;
+
+  border: 2px solid #000;
+  border-right: none;            /* makes it feel “attached” */
+  background: #fff;
+
+  font-family: inherit;
+  font-size: 18px;
+  line-height: 1;
+
+  cursor: pointer;
+}
+
+/* Content scroll area */
+#right-content{
+  height: 100%;
+  overflow-y: auto;
+  padding: 14px 14px 24px 14px;
+}
+
+/* Make building title feel like your left-panel headings */
+#right-content .building-title{
+  margin: 0 0 6px 0;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+#right-content .building-subtitle{
+  margin: 0 0 10px 0;
+  font-size: 12px;
+}
+
+#right-content hr{
+  border: none;
+  border-top: 2px solid #000;
+  margin: 10px 0;
+}
+
+/* Microwave cards: simple, printy, like your left UI */
+.mw-card{
+  border: 2px solid #000;
+  border-radius: 0;              /* match left pane: boxy */
+  padding: 10px;
+  margin: 12px 0;
+}
+
+.mw-card .mw-id{
+  margin: 0 0 8px 0;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+/* Log entry layout */
+.log-entry{
+  font-size: 12px;
+  line-height: 1.35;
+  margin-bottom: 8px;
+}
+
+.log-entry div{
+  margin: 2px 0;
+}
+
+.log-entry hr{
+  border: none;
+  border-top: 1px solid #000;
+  margin: 10px 0;
+}
+
+/* Optional: make the right panel links look like your left pane */
+.right-panel a{
+  color: #000;
+  text-decoration: underline;
+}
   </style>
 </head>
 
@@ -184,14 +257,14 @@
           `;
         }).join("");
 
-      rightContent.innerHTML = `
-        <div>
-          <p><b style="text-transform:uppercase;">${esc(buildingName)}</b></p>
-          <p>${totalMicros} microwaveID(s), ${totalEntries} total log entr${totalEntries === 1 ? "y" : "ies"}</p>
-          <hr>
-          ${cards || "<p>No microwaves logged for this building.</p>"}
-        </div>
-      `;
+rightContent.innerHTML = `
+  <div>
+    <p class="building-title">${esc(buildingName)}</p>
+    <p class="building-subtitle">${totalMicros} microwaveID(s), ${totalEntries} total log entr${totalEntries === 1 ? "y" : "ies"}</p>
+    <hr>
+    ${cards || "<p>No microwaves logged for this building.</p>"}
+  </div>
+`;
 
       openRightPanel();
     }
