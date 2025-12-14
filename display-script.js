@@ -89,8 +89,9 @@
     });
 
     L.geoJSON(geojsonFeature, {
-    onEachFeature: function (feature, layer) {
-      layer.on('click', function (e) {
+        interactive: false,
+        onEachFeature: function (feature, layer) {
+        layer.on('click', function (e) {
         const buildingName = feature.properties.Name || feature.properties.name || "Unknown";
         showFormPopup(e.latlng, buildingName);
       });
