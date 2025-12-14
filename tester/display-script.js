@@ -1,190 +1,117 @@
-const map = L.map("map", { preferCanvas: true }).setView([45.5048, -73.5769], 16);
+    const map = L.map('map').setView([45.5048, -73.5769], 16);
 
-L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}.png", {
-  attribution: "&copy; OpenStreetMap &copy; CARTO",
-  maxZoom: 19
-}).addTo(map);
+     L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap &copy; CARTO',
+      maxZoom: 19
+    }).addTo(map);
 
-const bounds = L.latLngBounds([45.4985, -73.5865], [45.5105, -73.5655]);
+      const bounds = L.latLngBounds(
+        [45.4985, -73.5865],
+        [45.5105, -73.5655]
+      );
 
-map.createPane("buildingPane");
-map.getPane("buildingPane").style.zIndex = 450;
+    const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRaYO34fzZ7CHjhWvLbIf0040V0uHVm0jTYjit8QrFDUmrFBg643QhaL5aeL4YrvweXoPlEUH4IPQS1/pub?gid=0&single=true&output=csv";
 
-map.createPane("microwavePane");
-map.getPane("microwavePane").style.zIndex = 650;
+    const group = L.featureGroup().addTo(map);
 
-const sheetURL =
-  "https://docs.google.com/spreadsheets/d/e/2PACX-1vRaYO34fzZ7CHjhWvLbIf0040V0uHVm0jTYjit8QrFDUmrFBg643QhaL5aeL4YrvweXoPlEUH4IPQS1/pub?gid=1743035491&single=true&output=csv";
+    Papa.parse(sheetURL, {
+      download: true,
+      header: true,
+      dynamicTyping: true,
+      skipEmptyLines: true,
+      complete: ({ data }) => {
+        console.log("rows loaded:", data.length);
+        if (!data.length) {
+          console.warn("no rows! check settings!");
+          return;
+        }
+        console.log("csv columns:", Object.keys(data[0]));
 
-const group = L.featureGroup().addTo(map);
+        let count = 0;
+        data.forEach(row => {
+          const lat = parseFloat(row.lat);
+          const lng = parseFloat(row.long);
 
-Papa.parse(sheetURL, {
-  download: true,
-  header: true,
-  dynamicTyping: true,
-  skipEmptyLines: true,
+          if (Number.isFinite(lat) && Number.isFinite(lng)) {
 
-  complete: ({ data }) => {
-    console.log("rows loaded:", data.length);
-    if (!data?.length) return;
+            const building = row.building || '';
+            const quantity = row.quantity || '';
+            const floor = row.floor || '';
+            const room = row.room || '';
+            const rating = row.rating || '';
+            const note = row.note || '-';
+            const contributor =  row.contributor || '';
 
-    const microwaves = {};
+            const popupHTML = `
+              <div class="display-popup">
+                <p><b style="text-transform: uppercase;">${building}</b></p>
+                <p><b>microwave(s):</b> ${quantity}</p>
+                <p><b>floor #:</b> ${floor}</p>
+                <p><b>room #:</b> ${room}</p>
+                <p><b>rating:</b> ${rating}/5</p>
+                <p><b>note:</b> ${note}</p>
+                <p><b>contributed by:</b> ${contributor}</p>
+              </div>
+            `;
 
-    data.forEach((row) => {
-      const id = row.microwaveID;
-      if (!id) return;
+            const m = L.circleMarker([lat, lng], {
+              radius: 4,
+              weight: 1,
+              fillOpacity: 1,
+              color: '#fff933',
+              fillColor: '#fff933'
+            }).bindPopup(popupHTML);
 
-      const lat = parseFloat(row.lat);
-      const lng = parseFloat(row.long ?? row.lng ?? row.lon ?? row.longitude);
+            m.addTo(group);
+          }
+        });
 
-      if (!microwaves[id]) {
-        microwaves[id] = {
-          id,
-          building: row.building || "",
-          lat,
-          lng,
-          logs: []
-        };
+        const counts = {};
+        data.forEach(r => {
+          if (r.contributor && r.contributor.trim() !== "?") {
+            const qty = Number(r.quantity) || 0;
+            counts[r.contributor] = (counts[r.contributor] || 0) + qty;
+          }
+        });
+        const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+        const topName = sorted[0]?.[0] || "";
+        const topTotal = sorted[0]?.[1] || 0;
+        document.getElementById("top-contributor-name").textContent = topName;
+        document.getElementById("top-contributor-total").textContent = topTotal;
+
+        console.log("Markers added:", count);
+        if (count > 0) map.fitBounds(group.getBounds(), { padding: [20, 20] });
+        else console.warn("parsed rows, but no valid lat/long found.");
+      },
+      error: (err) => {
+        console.error("papa parse error:", err);
       }
+    });
 
-      microwaves[id].logs.push({
-        quantity: row.quantity ?? "",
-        floor: row.floor ?? "",
-        room: row.room ?? "",
-        key: row.key ?? "",
-        note: row.note ?? "",
-        contributor: row.contributor ?? "",
-        rating: row.rating ?? ""
+    L.geoJSON(geojsonFeature, {
+        interactive: false,
+        onEachFeature: function (feature, layer) {
+        layer.on('click', function (e) {
+        const buildingName = feature.properties.Name || feature.properties.name || "Unknown";
+        showFormPopup(e.latlng, buildingName);
       });
+    },
+
+    style: { color: "#0000ff", weight: 2, opacity: 0.9, dashArray: "1, 5" }
+  }).addTo(map);
+
+    const panel = document.getElementById("info-panel");
+    const toggleBtn = document.getElementById("toggle-info");
+
+    toggleBtn.addEventListener("click", () => {
+      panel.classList.toggle("collapsed");
+      toggleBtn.textContent = panel.classList.contains("collapsed") ? ">" : "<";;
     });
 
-    Object.values(microwaves).forEach((mw) => {
-      if (!Number.isFinite(mw.lat) || !Number.isFinite(mw.lng)) return;
-
-      const wrapper = document.createElement("div");
-      wrapper.className = "mw-popup-wrapper";
-
-      // prevent popup interactions from panning/zooming map
-      L.DomEvent.disableClickPropagation(wrapper);
-      L.DomEvent.disableScrollPropagation(wrapper);
-
-      let index = 0;
-
-      const render = () => {
-        const log = mw.logs[index] || {};
-
-        wrapper.innerHTML = `
-          <div class="display-popup">
-            <p><b style="text-transform:uppercase;">${mw.building}</b></p>
-            <hr>
-
-            <p><b>microwave(s):</b> ${log.quantity ?? "-"}</p>
-            <p><b>floor #:</b> ${log.floor ?? "-"}</p>
-            <p><b>room #:</b> ${log.room ?? "-"}</p>
-            <p><b>access:</b> ${log.key ?? "-"}</p>
-            <p><b>rating:</b> ${log.rating ? `${log.rating} / 5` : "- / 5"}</p>
-            <p><b>note:</b> ${log.note || "-"}</p>
-            <p><b>contributed by:</b> ${log.contributor || "-"}</p>
-
-            <hr>
-            <p><b>entry:</b> ${index + 1} / ${mw.logs.length}</p>
-
-            ${
-              mw.logs.length > 1
-                ? `
-                  <div class="log-nav">
-                    <button type="button" data-action="prev">&lt;</button>
-                    <button type="button" data-action="next">&gt;</button>
-                  </div>
-                `
-                : ""
-            }
-          </div>
-        `;
-      };
-
-      render();
-
-      wrapper.addEventListener("click", (e) => {
-        const btn = e.target.closest("button[data-action]");
-        if (!btn) return;
-
-        const action = btn.dataset.action;
-        if (action === "prev") index = (index - 1 + mw.logs.length) % mw.logs.length;
-        if (action === "next") index = (index + 1) % mw.logs.length;
-
-        render();
-      });
-
-      // visible marker
-      const marker = L.circleMarker([mw.lat, mw.lng], {
-        pane: "microwavePane",
-        radius: 4,
-        weight: 1,
-        fillOpacity: 1,
-        color: "#0000ff",
-        fillColor: "#fff933"
-      }).addTo(group);
-
-      const hit = L.circleMarker([mw.lat, mw.lng], {
-        pane: "microwavePane",
-        radius: 10,
-        weight: 0,
-        opacity: 0,
-        fillOpacity: 0
-      }).addTo(group);
-
-      marker.bindPopup(wrapper, {
-        closeOnClick: false,
-        autoClose: true
-      });
-
-      hit.on("click", () => marker.openPopup());
+    document.getElementById("nav-submit").addEventListener("click", () => {
+      window.location.href = "index.html";
     });
 
-    const counts = {};
-    data.forEach((r) => {
-      const name = (r.contributor || "").trim();
-      if (!name || name === "?") return;
-      const qty = Number(r.quantity) || 0;
-      counts[name] = (counts[name] || 0) + qty;
+    document.getElementById("nav-display").addEventListener("click", () => {
+      window.location.href = "display.html";
     });
-
-    const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
-    document.getElementById("top-contributor-name").textContent = sorted[0]?.[0] || "";
-    document.getElementById("top-contributor-total").textContent = sorted[0]?.[1] || 0;
-
-    if (group.getLayers().length > 0) {
-      map.fitBounds(group.getBounds(), { padding: [20, 20] });
-    }
-  },
-
-  error: (err) => console.error("papa parse error:", err)
-});
-
-L.geoJSON(geojsonFeature, {
-  pane: "buildingPane",
-  onEachFeature: (feature, layer) => {
-    layer.on("click", (e) => {
-      const buildingName = feature.properties?.Name || feature.properties?.name || "Unknown";
-      showFormPopup(e.latlng, buildingName);
-    });
-  },
-  style: { color: "#0000ff", weight: 2, opacity: 0.9, dashArray: "1, 5" }
-}).addTo(map);
-
-const panel = document.getElementById("info-panel");
-const toggleBtn = document.getElementById("toggle-info");
-
-toggleBtn.addEventListener("click", () => {
-  panel.classList.toggle("collapsed");
-  toggleBtn.textContent = panel.classList.contains("collapsed") ? ">" : "<";
-});
-
-document.getElementById("nav-submit").addEventListener("click", () => {
-  window.location.href = "index.html";
-});
-
-document.getElementById("nav-display").addEventListener("click", () => {
-  window.location.href = "display.html";
-});
