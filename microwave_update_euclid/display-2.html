@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>mcgill microwave map - explore</title>
+<link rel="icon" type="image/x-icon" href="microwave_favicon.jpg">
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+ <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin=""/>
+ <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+     crossorigin=""></script>
+  <script src="https://unpkg.com/papaparse@5.3.2/papaparse.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <div id="map-wrapper">
+    <div id="info-panel">
+      <button id="toggle-info"><</button>
+      <div id="info-box">
+        <img src="IMG_1775.JPG" alt="mcgill microwave map" class="title-image">
+         <div id="nav-buttons">
+          <button class="nav-btn" id="nav-submit">SUBMIT</button>
+          <button class="nav-btn" id="nav-display">EXPLORE</button>
+          <button class="nav-btn" id="nav-euclid">NAVIGATE</button>
+        </div>
+
+        <p class="intro">
+          this interactive map seeks to document every 
+          <span class="highlight">microwave</span> 
+          on mcgill's downtown campus.
+        </p>
+
+        <p class="instruction">
+          <span class="highlight"; font-size=14px;>this page is updated with contributions after submission verification.</span> 
+        </p>
+
+        <p class="instruction">
+          click on the markers to check out user-submitted microwave spots!
+        </p>
+
+        <p class="instruction">
+         this map is part of the final project for class GEOG 414. contributed data supports further spatial analysis of microwaves.
+        </p>
+
+        <p class="instruction">
+          top contributor is 
+          <span id="top-contributor-name" style="font-weight: bold; text-transform: uppercase;"></span>, 
+          with 
+          <span id="top-contributor-total" style="font-weight: bold;"></span>
+          microwaves logged!
+        </p>
+
+        <button class="nav-btn" id="random-mw">take me to a random microwave!</button>
+
+        <p class="goal">questions? <a class="email-button" href="mailto:charlotte.alarie@mail.mcgill.ca">email me!</a></p>
+      </div>
+    </div>
+    <div id="map"></div>
+  </div>
+  <script src="https://unpkg.com/leaflet-labeltextcollision/leaflet-labeltextcollision.js"></script>
+  <script src="submit-geojson.js"></script>
+  <script src="display-script-2.js"></script>
+</body>
+
+</html>
