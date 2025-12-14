@@ -108,7 +108,7 @@
     });
 
     document.getElementById("nav-submit").addEventListener("click", () => {
-      window.location.href = "index-2.html";
+      window.location.href = "submit-2.html";
     });
 
     document.getElementById("nav-display").addEventListener("click", () => {
