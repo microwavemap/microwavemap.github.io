@@ -25,3 +25,7 @@
     document.getElementById("nav-display").addEventListener("click", () => {
       window.location.href = "display-2.html";
     });
+
+    document.getElementById("nav-euclid").addEventListener("click", () => {
+      window.location.href = "navigate-2.html";
+    });
