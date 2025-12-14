@@ -1,21 +1,66 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="utf-8">
-<title>mcgill microwave map - explore</title>
-<link rel="icon" type="image/x-icon" href="microwave_favicon.jpg">
-<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
- <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-     crossorigin=""/>
- <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-     crossorigin=""></script>
+  <meta charset="utf-8">
+  <title>mcgill microwave map - explore</title>
+  <link rel="icon" type="image/x-icon" href="microwave_favicon.jpg">
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""/>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""></script>
+
   <script src="https://unpkg.com/papaparse@5.3.2/papaparse.min.js"></script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style-display.css"></link>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style-display.css">
+
+  <!-- Added CSS for right panel + cards (you can move this into style-display.css) -->
+  <style>
+    .right-panel{
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 340px;
+      height: 100vh;
+      background: #fff;
+      border-left: 1px solid #ddd;
+      overflow: auto;
+      z-index: 9999;
+      padding: 12px;
+      transition: transform 0.2s ease;
+    }
+    .right-panel.collapsed{ transform: translateX(340px); }
+
+    #toggle-right{
+      position: absolute;
+      left: -28px;
+      top: 12px;
+      width: 28px;
+      height: 28px;
+      cursor: pointer;
+      border: 1px solid #ddd;
+      background: #fff;
+      border-radius: 6px;
+      font-family: inherit;
+    }
+
+    .mw-card{
+      border: 1px solid #eee;
+      border-radius: 10px;
+      padding: 10px;
+      margin: 10px 0;
+    }
+    .log-entry{ font-size: 0.95rem; }
+    .log-entry hr{ border: none; border-top: 1px solid #eee; margin: 10px 0; }
+  </style>
 </head>
 
 <body>
@@ -24,176 +69,255 @@
       <button id="toggle-info"><</button>
       <div id="info-box">
         <img src="IMG_1775.JPG" alt="mcgill microwave map" class="title-image">
-         <div id="nav-buttons">
+
+        <div id="nav-buttons">
           <button class="nav-btn" id="nav-submit">SUBMIT</button>
           <button class="nav-btn" id="nav-display">EXPLORE</button>
         </div>
 
         <p class="intro">
-          this interactive map seeks to document every 
-          <span class="highlight">microwave</span> 
+          this interactive map seeks to document every
+          <span class="highlight">microwave</span>
           on mcgill's downtown campus.
         </p>
 
         <p class="instruction">
-          <span class="highlight"; font-size=14px;">this page is updated with contributions after submission verification.</span> 
+          <span class="highlight" style="font-size:14px;">this page is updated with contributions after submission verification.</span>
         </p>
 
         <p class="instruction">
-          click on the markers to check out user-submitted microwave spots!
+          click on buildings to view all microwave logs for that building.
         </p>
 
         <p class="instruction">
-         this map is part of the final project for class GEOG 414. contributed data supports further spatial analysis of microwaves.
+          this map is part of the final project for class GEOG 414. contributed data supports further spatial analysis of microwaves.
         </p>
 
         <p class="instruction">
-          top contributor is 
-          <span id="top-contributor-name" style="font-weight: bold; text-transform: uppercase;"></span>, 
-          with 
-          <span id="top-contributor-total" style="font-weight: bold;"></span>
+          top contributor is
+          <span id="top-contributor-name" style="font-weight:bold; text-transform:uppercase;"></span>,
+          with
+          <span id="top-contributor-total" style="font-weight:bold;"></span>
           microwaves logged!
         </p>
 
         <p class="goal">questions? <a class="email-button" href="mailto:charlotte.alarie@mail.mcgill.ca">email me!</a></p>
       </div>
     </div>
+
     <div id="map"></div>
+
+    <div id="right-panel" class="right-panel collapsed">
+      <button id="toggle-right">‹</button>
+      <div id="right-content"></div>
+    </div>
   </div>
+
   <script src="https://unpkg.com/leaflet-labeltextcollision/leaflet-labeltextcollision.js"></script>
   <script src="submit-geojson.js"></script>
 
   <script>
-        const map = L.map('map').setView([45.5048, -73.5769], 16);
+    // ----------------------------
+    // Map base
+    // ----------------------------
+    const map = L.map('map').setView([45.5048, -73.5769], 16);
 
-     L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}.png', {
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}.png', {
       attribution: '&copy; OpenStreetMap &copy; CARTO',
       maxZoom: 19
     }).addTo(map);
 
-      const bounds = L.latLngBounds(
-        [45.4985, -73.5865],
-        [45.5105, -73.5655]
-      );
+    const bounds = L.latLngBounds(
+      [45.4985, -73.5865],
+      [45.5105, -73.5655]
+    );
 
-    const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRaYO34fzZ7CHjhWvLbIf0040V0uHVm0jTYjit8QrFDUmrFBg643QhaL5aeL4YrvweXoPlEUH4IPQS1/pub?gid=1743035491&single=true&output=csv";
+    // ----------------------------
+    // Right panel UI
+    // ----------------------------
+    const rightPanel = document.getElementById("right-panel");
+    const rightContent = document.getElementById("right-content");
+    const toggleRight = document.getElementById("toggle-right");
 
-    const group = L.featureGroup().addTo(map);
-
-   Papa.parse(sheetURL, {
-    download: true,
-    header: true,
-    dynamicTyping: true,
-    skipEmptyLines: true,
-    complete: ({ data }) => {
-    console.log("rows loaded:", data.length);
-    if (!data.length) return;
-
-    const microwaves = {};
-
-    data.forEach(row => {
-      const id = row.microwaveID;
-      if (!id) return;
-
-      if (!microwaves[id]) {
-        microwaves[id] = {
-          id: id,
-          building: row.building,
-          lat: parseFloat(row.lat),
-          lng: parseFloat(row.long),
-          logs: []
-        };
-      }
-
-      microwaves[id].logs.push({
-        quantity: row.quantity,
-        floor: row.floor,
-        room: row.room,
-        key: row.key,
-        note: row.note,
-        contributor: row.contributor,
-        rating: row.rating
-      });
+    toggleRight.addEventListener("click", () => {
+      rightPanel.classList.toggle("collapsed");
+      toggleRight.textContent = rightPanel.classList.contains("collapsed") ? "‹" : "›";
     });
 
-Object.values(microwaves).forEach(m => {
-  if (!Number.isFinite(m.lat) || !Number.isFinite(m.lng)) return;
-
-  const wrapper = document.createElement("div");
-  wrapper.className = "mw-popup-wrapper";
-
-  L.DomEvent.disableClickPropagation(wrapper);
-  L.DomEvent.disableScrollPropagation(wrapper);
-
-  let index = 0;
-
-  function updatePopup() {
-    const log = m.logs[index];
-
-    wrapper.innerHTML = `
-      <div class="display-popup">
-        <p><b style="text-transform:uppercase;">${m.building}</b></p>
-
-        <hr>
-
-        <p><b>microwave(s):</b> ${log.quantity}</p>
-        <p><b>floor #:</b> ${log.floor}</p>
-        <p><b>room #:</b> ${log.room}</p>
-        <p><b>access:</b> ${log.key}</p>
-        <p><b>rating:</b> ${log.rating || "-"} / 5</p>
-        <p><b>note:</b> ${log.note || "-"}</p>
-        <p><b>contributed by:</b> ${log.contributor || "-"}</p>
-
-        <hr>
-
-        <p><b>entry:</b> ${index + 1} / ${m.logs.length}</p>
-
-        ${m.logs.length > 1 ? `
-          <div class="log-nav">
-            <button id="prevLog"><</button>
-            <button id="nextLog">></button>
-          </div>
-        ` : ""}
-      </div>
-    `;
-
-    const inner = wrapper.querySelector(".display-popup");
-    if (inner) {
-      L.DomEvent.disableClickPropagation(inner);
-      L.DomEvent.disableScrollPropagation(inner);
+    function openRightPanel() {
+      rightPanel.classList.remove("collapsed");
+      toggleRight.textContent = "›";
     }
-  }
 
-  updatePopup();
-
-  wrapper.addEventListener("click", e => {
-    if (e.target.id === "prevLog") {
-      index = (index - 1 + m.logs.length) % m.logs.length;
-      updatePopup();
+    function esc(s){
+      return String(s ?? "").replace(/[&<>"']/g, c => ({
+        '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+      }[c]));
     }
-    if (e.target.id === "nextLog") {
-      index = (index + 1) % m.logs.length;
-      updatePopup();
+
+    function renderBuildingLogs(buildingName, microwavesInBuilding) {
+      const totalMicros = microwavesInBuilding.length;
+      const totalEntries = microwavesInBuilding.reduce((sum, m) => sum + m.logs.length, 0);
+
+      const cards = microwavesInBuilding
+        .sort((a,b) => String(a.id).localeCompare(String(b.id)))
+        .map(m => {
+          const entries = m.logs.map((log, i) => `
+            <div class="log-entry">
+              <div><b>entry:</b> ${i+1} / ${m.logs.length}</div>
+              <div><b>microwave(s):</b> ${esc(log.quantity)}</div>
+              <div><b>floor #:</b> ${esc(log.floor)}</div>
+              <div><b>room #:</b> ${esc(log.room)}</div>
+              <div><b>access:</b> ${esc(log.key)}</div>
+              <div><b>rating:</b> ${esc(log.rating || "-")} / 5</div>
+              <div><b>note:</b> ${esc(log.note || "-")}</div>
+              <div><b>contributed by:</b> ${esc(log.contributor || "-")}</div>
+              <hr>
+            </div>
+          `).join("");
+
+          return `
+            <div class="mw-card">
+              <p><b>microwaveID:</b> ${esc(m.id)}</p>
+              ${entries}
+            </div>
+          `;
+        }).join("");
+
+      rightContent.innerHTML = `
+        <div>
+          <p><b style="text-transform:uppercase;">${esc(buildingName)}</b></p>
+          <p>${totalMicros} microwaveID(s), ${totalEntries} total log entr${totalEntries === 1 ? "y" : "ies"}</p>
+          <hr>
+          ${cards || "<p>No microwaves logged for this building.</p>"}
+        </div>
+      `;
+
+      openRightPanel();
     }
-  });
 
-  const marker = L.circleMarker([m.lat, m.lng], {
-    radius: 4,
-    weight: 1,
-    fillOpacity: 1,
-    color: '#0000ff',
-    fillColor: '#fff933'
-  }).addTo(group);
+    // ----------------------------
+    // Building polygon click handling
+    // ----------------------------
+    let microwavesByBuilding = {}; // populated after CSV loads
+    let selectedLayer = null;
 
-  marker.bindPopup(wrapper, {
-    closeOnClick: false,
-    autoClose: true
-  });
-});
+    function normalizeBuildingName(s){
+      return String(s || "").trim();
+    }
 
+    // If polygon names differ from CSV building values, map them here.
+    const buildingNameMap = {
+      // "Burnside": "Burnside Hall"
+    };
+
+    function resolveBuildingNameFromFeature(feature){
+      const raw = feature.properties.Name || feature.properties.name || "";
+      const polyName = normalizeBuildingName(raw);
+      return buildingNameMap[polyName] || polyName;
+    }
+
+    function highlight(layer){
+      if (selectedLayer) selectedLayer.setStyle({ weight: 2, fillOpacity: 0.08 });
+      selectedLayer = layer;
+      layer.setStyle({ weight: 4, fillOpacity: 0.18 });
+    }
+
+    const buildingsLayer = L.geoJSON(geojsonFeature, {
+      style: {
+        color: "#0000ff",
+        weight: 2,
+        opacity: 0.9,
+        fillOpacity: 0.08,
+        dashArray: "1, 5"
+      },
+      onEachFeature: (feature, layer) => {
+        layer.on("click", () => {
+          const buildingName = resolveBuildingNameFromFeature(feature);
+          const list = microwavesByBuilding[buildingName] || [];
+          highlight(layer);
+          renderBuildingLogs(buildingName, list);
+        });
+      }
+    }).addTo(map);
+
+    // ----------------------------
+    // CSV load + indexing
+    // ----------------------------
+    const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRaYO34fzZ7CHjhWvLbIf0040V0uHVm0jTYjit8QrFDUmrFBg643QhaL5aeL4YrvweXoPlEUH4IPQS1/pub?gid=1743035491&single=true&output=csv";
+
+    // Still useful for fitBounds over all microwave points (even if polygons are the click target)
+    const group = L.featureGroup().addTo(map);
+
+    Papa.parse(sheetURL, {
+      download: true,
+      header: true,
+      dynamicTyping: true,
+      skipEmptyLines: true,
+      complete: ({ data }) => {
+        console.log("rows loaded:", data.length);
+        if (!data.length) return;
+
+        // Build microwaves by microwaveID
+        const microwaves = {};
+        data.forEach(row => {
+          const id = row.microwaveID;
+          if (!id) return;
+
+          if (!microwaves[id]) {
+            microwaves[id] = {
+              id: id,
+              building: row.building,
+              lat: parseFloat(row.lat),
+              lng: parseFloat(row.long),
+              logs: []
+            };
+          }
+
+          microwaves[id].logs.push({
+            quantity: row.quantity,
+            floor: row.floor,
+            room: row.room,
+            key: row.key,
+            note: row.note,
+            contributor: row.contributor,
+            rating: row.rating
+          });
+        });
+
+        // Index by building for polygon click rendering
+        const byBuilding = {};
+        Object.values(microwaves).forEach(m => {
+          const b = String(m.building || "").trim();
+          if (!b) return;
+          if (!byBuilding[b]) byBuilding[b] = [];
+          byBuilding[b].push(m);
+        });
+        microwavesByBuilding = byBuilding;
+
+        // Optional: keep point markers as a visual layer (no popups)
+        Object.values(microwaves).forEach(m => {
+          if (!Number.isFinite(m.lat) || !Number.isFinite(m.lng)) return;
+
+          const marker = L.circleMarker([m.lat, m.lng], {
+            radius: 4,
+            weight: 1,
+            fillOpacity: 1,
+            color: '#0000ff',
+            fillColor: '#fff933'
+          }).addTo(group);
+
+          // Optional shortcut: click marker => open that building in right panel
+          marker.on("click", () => {
+            const b = String(m.building || "").trim();
+            renderBuildingLogs(b || "Unknown", microwavesByBuilding[b] || []);
+          });
+        });
+
+        // Top contributor calc
         const counts = {};
         data.forEach(r => {
-          if (r.contributor && r.contributor.trim() !== "?") {
+          if (r.contributor && String(r.contributor).trim() !== "?") {
             const qty = Number(r.quantity) || 0;
             counts[r.contributor] = (counts[r.contributor] || 0) + qty;
           }
@@ -203,31 +327,25 @@ Object.values(microwaves).forEach(m => {
         document.getElementById("top-contributor-name").textContent = sorted[0]?.[0] || "";
         document.getElementById("top-contributor-total").textContent = sorted[0]?.[1] || 0;
 
+        // Fit bounds to microwaves if present; otherwise fallback to your campus bounds
         if (group.getLayers().length > 0) {
           map.fitBounds(group.getBounds(), { padding: [20, 20] });
+        } else {
+          map.fitBounds(bounds, { padding: [20, 20] });
         }
       },
-
       error: (err) => console.error("papa parse error:", err)
     });
 
-    L.geoJSON(geojsonFeature, {
-    onEachFeature: function (feature, layer) {
-      layer.on('click', function (e) {
-        const buildingName = feature.properties.Name || feature.properties.name || "Unknown";
-        showFormPopup(e.latlng, buildingName);
-      });
-    },
-
-    style: { color: "#0000ff", weight: 2, opacity: 0.9, dashArray: "1, 5" }
-  }).addTo(map);
-
+    // ----------------------------
+    // Left panel + nav buttons
+    // ----------------------------
     const panel = document.getElementById("info-panel");
     const toggleBtn = document.getElementById("toggle-info");
 
     toggleBtn.addEventListener("click", () => {
       panel.classList.toggle("collapsed");
-      toggleBtn.textContent = panel.classList.contains("collapsed") ? ">" : "<";;
+      toggleBtn.textContent = panel.classList.contains("collapsed") ? ">" : "<";
     });
 
     document.getElementById("nav-submit").addEventListener("click", () => {
@@ -239,5 +357,4 @@ Object.values(microwaves).forEach(m => {
     });
   </script>
 </body>
-
 </html>
