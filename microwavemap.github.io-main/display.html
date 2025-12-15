@@ -104,30 +104,25 @@ function openRightPanel() {
     const rightBox = document.getElementById("right-box");
     const toggleRight = document.getElementById("toggle-right");
 
-    function esc(s){
-      return String(s ?? "").replace(/[&<>"']/g, c => ({
-        '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
-      }[c]));
-    }
+function esc(s){
+  return String(s ?? "").replace(/[&<>"']/g, c => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  }[c]));
+}
 
 function isUnrestricted(log){
   return String(log?.key || "").trim().toLowerCase() === "unrestricted";
-    
-function renderBuildingLogs(buildingName, microwavesInBuilding) {
-  const onlyUnrestricted = !!onlyUnrestrictedMapEl?.checked;
+}
 
-  // filter microwaveIDs + their logs based on toggle
+function renderBuildingLogs(buildingName, microwavesInBuilding) {
+  const onlyUnrestricted = !!(onlyUnrestrictedMapEl && onlyUnrestrictedMapEl.checked);
+
   const filteredMicrowaves = microwavesInBuilding
     .map(m => {
       const logs = Array.isArray(m.logs) ? m.logs : [];
       const keptLogs = onlyUnrestricted ? logs.filter(isUnrestricted) : logs;
-
-      return {
-        ...m,
-        logs: keptLogs
-      };
+      return { ...m, logs: keptLogs };
     })
-    // drop microwaveIDs with no remaining logs
     .filter(m => m.logs.length > 0);
 
   const totalMicros = filteredMicrowaves.length;
@@ -136,7 +131,7 @@ function renderBuildingLogs(buildingName, microwavesInBuilding) {
   const cards = filteredMicrowaves
     .sort((a, b) => String(a.id).localeCompare(String(b.id)))
     .map(m => {
-      const first = m.logs[0] || {}; // first log AFTER filtering
+      const first = m.logs[0] || {};
 
       const header = `
         <div class="mw-objective">
@@ -309,12 +304,12 @@ onlyUnrestrictedMapEl.addEventListener("change", () => {
         });
         microwavesByBuilding = byBuilding;
 
-Object.values(microwaves).forEach(m => {
+        Object.values(microwaves).forEach(m => {
   if (!Number.isFinite(m.lat) || !Number.isFinite(m.lng)) return;
 
   const first = m.logs?.[0] || {};
   const access = String(first.key || "").trim().toLowerCase();
-  const isUnrestricted = access === "unrestricted";
+  const unrestricted = access === "unrestricted";
 
   const marker = L.circleMarker([m.lat, m.lng], {
     radius: 4,
@@ -326,7 +321,7 @@ Object.values(microwaves).forEach(m => {
   });
 
   marker.addTo(markersAll);
-  if (isUnrestricted) marker.addTo(markersUnrestricted);
+  if (unrestricted) marker.addTo(markersUnrestricted);
 });
 
         const counts = {};
