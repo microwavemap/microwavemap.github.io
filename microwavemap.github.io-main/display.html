@@ -110,22 +110,33 @@ function openRightPanel() {
       }[c]));
     }
 
+function isUnrestricted(log){
+  return String(log?.key || "").trim().toLowerCase() === "unrestricted";
+    
 function renderBuildingLogs(buildingName, microwavesInBuilding) {
-  const totalMicros = microwavesInBuilding.length;
-  const totalEntries = microwavesInBuilding.reduce((sum, m) => sum + m.logs.length, 0);
   const onlyUnrestricted = !!onlyUnrestrictedMapEl?.checked;
 
-  const cards = microwavesInBuilding
+  // filter microwaveIDs + their logs based on toggle
+  const filteredMicrowaves = microwavesInBuilding
+    .map(m => {
+      const logs = Array.isArray(m.logs) ? m.logs : [];
+      const keptLogs = onlyUnrestricted ? logs.filter(isUnrestricted) : logs;
+
+      return {
+        ...m,
+        logs: keptLogs
+      };
+    })
+    // drop microwaveIDs with no remaining logs
+    .filter(m => m.logs.length > 0);
+
+  const totalMicros = filteredMicrowaves.length;
+  const totalEntries = filteredMicrowaves.reduce((sum, m) => sum + m.logs.length, 0);
+
+  const cards = filteredMicrowaves
     .sort((a, b) => String(a.id).localeCompare(String(b.id)))
     .map(m => {
-      const first = m.logs[0] || {};
-
-  microwavesInBuilding = onlyUnrestricted
-  ? microwavesInBuilding.filter(m => {
-      const first = m.logs?.[0];
-      return String(first?.key || "").trim().toLowerCase() === "unrestricted";
-    })
-  : microwavesInBuilding;
+      const first = m.logs[0] || {}; // first log AFTER filtering
 
       const header = `
         <div class="mw-objective">
@@ -157,9 +168,12 @@ function renderBuildingLogs(buildingName, microwavesInBuilding) {
   rightBox.innerHTML = `
     <div>
       <p class="building-title">${esc(buildingName)}</p>
-      <p class="building-subtitle">${totalMicros} unique microwave location logs, ${totalEntries} total log entr${totalEntries === 1 ? "y" : "ies"}</p>
+      <p class="building-subtitle">
+        ${totalMicros} microwave location(s), ${totalEntries} review entr${totalEntries === 1 ? "y" : "ies"}
+        ${onlyUnrestricted ? " (unrestricted only)" : ""}
+      </p>
       <hr>
-      ${cards || "<p>no microwaves logged for this building (yet)!</p>"}
+      ${cards || "<p>no microwaves match this filter for this building.</p>"}
     </div>
   `;
 
@@ -201,6 +215,7 @@ onlyUnrestrictedMapEl.addEventListener("change", () => {
     renderBuildingLogs(lastClickedBuilding, microwavesByBuilding[lastClickedBuilding] || []);
   }
 });
+  
     const markersAll = L.layerGroup().addTo(map);
     const markersUnrestricted = L.layerGroup();
     let activeMarkers = markersAll;
