@@ -77,9 +77,6 @@
   <script src="submit-geojson.js"></script>
 
   <script>
-    // ----------------------------
-    // Map base
-    // ----------------------------
     const map = L.map('map').setView([45.5048, -73.5769], 16);
 
     L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}.png', {
@@ -92,9 +89,6 @@
       [45.5105, -73.5655]
     );
 
-    // ----------------------------
-    // Right panel UI
-    // ----------------------------
     const rightPanel = document.getElementById("right-panel");
     const rightContent = document.getElementById("right-content");
     const toggleRight = document.getElementById("toggle-right");
@@ -156,9 +150,6 @@ rightContent.innerHTML = `
       openRightPanel();
     }
 
-    // ----------------------------
-    // Building polygon click handling
-    // ----------------------------
     let microwavesByBuilding = {}; // populated after CSV loads
     let selectedLayer = null;
 
@@ -166,9 +157,7 @@ rightContent.innerHTML = `
       return String(s || "").trim();
     }
 
-    // If polygon names differ from CSV building values, map them here.
     const buildingNameMap = {
-      // "Burnside": "Burnside Hall"
     };
 
     function resolveBuildingNameFromFeature(feature){
@@ -201,12 +190,8 @@ rightContent.innerHTML = `
       }
     }).addTo(map);
 
-    // ----------------------------
-    // CSV load + indexing
-    // ----------------------------
     const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRaYO34fzZ7CHjhWvLbIf0040V0uHVm0jTYjit8QrFDUmrFBg643QhaL5aeL4YrvweXoPlEUH4IPQS1/pub?gid=1743035491&single=true&output=csv";
 
-    // Still useful for fitBounds over all microwave points (even if polygons are the click target)
     const group = L.featureGroup().addTo(map);
 
     Papa.parse(sheetURL, {
@@ -218,7 +203,6 @@ rightContent.innerHTML = `
         console.log("rows loaded:", data.length);
         if (!data.length) return;
 
-        // Build microwaves by microwaveID
         const microwaves = {};
         data.forEach(row => {
           const id = row.microwaveID;
@@ -245,7 +229,6 @@ rightContent.innerHTML = `
           });
         });
 
-        // Index by building for polygon click rendering
         const byBuilding = {};
         Object.values(microwaves).forEach(m => {
           const b = String(m.building || "").trim();
