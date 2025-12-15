@@ -280,6 +280,11 @@ rightContent.innerHTML = `
       toggleBtn.textContent = panel.classList.contains("collapsed") ? ">" : "<";
     });
 
+    toggleRight.addEventListener("click", () => {
+       rightPanel.classList.toggle("collapsed");
+       toggleRight.textContent = rightPanel.classList.contains("collapsed") ? "<" : ">";
+    });
+
     document.getElementById("nav-submit").addEventListener("click", () => {
       window.location.href = "index.html";
     });
