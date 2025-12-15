@@ -26,13 +26,14 @@
 <body>
   <div id="map-wrapper">
     <div id="info-panel">
-      <button id="toggle-info"><</button>
+      <button id="toggle-info" type="button"><</button>
+
       <div id="info-box">
         <img src="IMG_1775.JPG" alt="mcgill microwave map" class="title-image">
 
         <div id="nav-buttons">
-          <button class="nav-btn" id="nav-submit">SUBMIT</button>
-          <button class="nav-btn" id="nav-display">EXPLORE</button>
+          <button class="nav-btn" id="nav-submit" type="button">SUBMIT</button>
+          <button class="nav-btn" id="nav-display" type="button">EXPLORE</button>
         </div>
 
         <p class="intro">
@@ -61,15 +62,21 @@
           microwaves logged!
         </p>
 
-        <p class="goal">questions? <a class="email-button" href="mailto:charlotte.alarie@mail.mcgill.ca">email me!</a></p>
+        <p class="goal">
+          questions? <a class="email-button" href="mailto:charlotte.alarie@mail.mcgill.ca">email me!</a>
+        </p>
       </div>
     </div>
 
     <div id="map"></div>
 
-    <div id="right-panel" class="right-panel collapsed">
-      <button id="toggle-right">‹</button>
-      <div id="right-content"></div>
+    <div id="right-panel" class="collapsed">
+      <button id="toggle-right" type="button">></button>
+
+      <div id="right-box">
+        <p class="building-title">click a building</p>
+        <p class="building-subtitle">microwave logs will show up here.</p>
+      </div>
     </div>
   </div>
 
@@ -90,18 +97,8 @@
     );
 
     const rightPanel = document.getElementById("right-panel");
-    const rightContent = document.getElementById("right-content");
+    const rightBox = document.getElementById("right-box");
     const toggleRight = document.getElementById("toggle-right");
-
-    toggleRight.addEventListener("click", () => {
-      rightPanel.classList.toggle("collapsed");
-      toggleRight.textContent = rightPanel.classList.contains("collapsed") ? "‹" : "›";
-    });
-
-    function openRightPanel() {
-      rightPanel.classList.remove("collapsed");
-      toggleRight.textContent = "›";
-    }
 
     function esc(s){
       return String(s ?? "").replace(/[&<>"']/g, c => ({
