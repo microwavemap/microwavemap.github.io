@@ -41,7 +41,7 @@ body {
   justify-content: center;
   align-items: center;
   color: var(--blue);
-  font-size: 11px
+  font-size: 12px
 }
 
 #map-wrapper {
