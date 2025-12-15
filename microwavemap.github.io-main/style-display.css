@@ -506,3 +506,7 @@ body, button, input, select, textarea, .leaflet-container, .leaflet-popup-conten
     z-index: 9999;
   }
 }
+
+#right-box{
+  padding-top: 64px;
+}
