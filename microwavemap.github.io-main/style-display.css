@@ -509,6 +509,7 @@ body, button, input, select, textarea, .leaflet-container, .leaflet-popup-conten
 
 #right-box{
   padding-top: 32px;
+  font-size: 11px;
 }
 
 .mw-objective{
