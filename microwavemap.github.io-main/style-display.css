@@ -529,3 +529,28 @@ body, button, input, select, textarea, .leaflet-container, .leaflet-popup-conten
   margin-bottom: 6px;
   font-weight: 700;
 }
+
+.mw-filter-control{
+  background: #fff;
+  border: 2.5px solid var(--blue);
+  box-shadow: none;
+  padding: 6px 8px;
+  margin-top: 6px;
+  border-radius: 0;
+}
+
+.mw-filter-toggle{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font);
+  font-weight: 700;
+  font-size: 12px;
+  color: var(--blue);
+  cursor: pointer;
+  user-select: none;
+}
+
+.mw-filter-toggle input{
+  accent-color: var(--blue);
+}
