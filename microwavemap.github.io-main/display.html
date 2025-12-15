@@ -113,11 +113,19 @@ function openRightPanel() {
 function renderBuildingLogs(buildingName, microwavesInBuilding) {
   const totalMicros = microwavesInBuilding.length;
   const totalEntries = microwavesInBuilding.reduce((sum, m) => sum + m.logs.length, 0);
+  const onlyUnrestricted = !!onlyUnrestrictedMapEl?.checked;
 
   const cards = microwavesInBuilding
     .sort((a, b) => String(a.id).localeCompare(String(b.id)))
     .map(m => {
       const first = m.logs[0] || {};
+
+  microwavesInBuilding = onlyUnrestricted
+  ? microwavesInBuilding.filter(m => {
+      const first = m.logs?.[0];
+      return String(first?.key || "").trim().toLowerCase() === "unrestricted";
+    })
+  : microwavesInBuilding;
 
       const header = `
         <div class="mw-objective">
@@ -158,7 +166,40 @@ function renderBuildingLogs(buildingName, microwavesInBuilding) {
   openRightPanel();
 }
 
-    let microwavesByBuilding = {}; // populated after CSV loads
+let lastClickedBuilding = null;
+
+const FilterControl = L.Control.extend({
+  options: { position: "topleft" },
+
+  onAdd: function () {
+    const container = L.DomUtil.create("div", "leaflet-control mw-filter-control");
+
+    container.innerHTML = `
+      <label class="mw-filter-toggle">
+        <input type="checkbox" id="only-unrestricted-map">
+        only unrestricted
+      </label>
+    `;
+
+    // prevent map drag/scroll when interacting
+    L.DomEvent.disableClickPropagation(container);
+    L.DomEvent.disableScrollPropagation(container);
+
+    return container;
+  }
+});
+
+map.addControl(new FilterControl());
+
+const onlyUnrestrictedMapEl = document.getElementById("only-unrestricted-map");
+
+onlyUnrestrictedMapEl.addEventListener("change", () => {
+  if (!lastClickedBuilding) return;
+  const list = microwavesByBuilding[lastClickedBuilding] || [];
+  renderBuildingLogs(lastClickedBuilding, list);
+});
+    
+    let microwavesByBuilding = {}; 
     let selectedLayer = null;
 
     function normalizeBuildingName(s){
@@ -191,6 +232,7 @@ function renderBuildingLogs(buildingName, microwavesInBuilding) {
       onEachFeature: (feature, layer) => {
         layer.on("click", () => {
           const buildingName = resolveBuildingNameFromFeature(feature);
+          lastClickedBuilding = buildingName;
           const list = microwavesByBuilding[buildingName] || [];
           highlight(layer);
           renderBuildingLogs(buildingName, list);
