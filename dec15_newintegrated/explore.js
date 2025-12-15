@@ -163,7 +163,6 @@ window.APP = window.APP || {};
           ${totalMicros} microwave location(s), ${totalEntries} review entr${totalEntries === 1 ? "y" : "ies"}
           ${onlyUnrestricted ? " (unrestricted only)" : ""}
         </p>
-        <hr>
         ${cards || "<p>no microwaves match this filter for this building.</p>"}
       </div>
     `);
