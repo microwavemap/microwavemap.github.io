@@ -265,6 +265,7 @@ body {
 
 #right-box .mw-card {
   border: 2px dotted var(--blue);
+  font-size: 12px;
   background: #fff;
   padding: 10px 12px;
   margin: 12px 0;
