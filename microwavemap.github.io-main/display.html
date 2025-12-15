@@ -95,7 +95,11 @@
       [45.4985, -73.5865],
       [45.5105, -73.5655]
     );
-
+    
+function openRightPanel() {
+  rightPanel.classList.remove("collapsed");
+  toggleRight.textContent = ">";
+}
     const rightPanel = document.getElementById("right-panel");
     const rightBox = document.getElementById("right-box");
     const toggleRight = document.getElementById("toggle-right");
@@ -135,7 +139,7 @@
           `;
         }).join("");
 
-rightContent.innerHTML = `
+rightBox.innerHTML = `
   <div>
     <p class="building-title">${esc(buildingName)}</p>
     <p class="building-subtitle">${totalMicros} unique microwave location logs, ${totalEntries} total log entr${totalEntries === 1 ? "y" : "ies"}</p>
