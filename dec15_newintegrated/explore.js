@@ -363,7 +363,7 @@ window.APP = window.APP || {};
         : microwavesFlat;
 
       if (!candidates.length){
-        setRightPanelHTML("nearest microwave", `
+        setRightPanelHTML("", `
           <div>
             <p class="building-title">no matches</p>
             <p class="building-subtitle">no microwaves available under current filter.</p>
