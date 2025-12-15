@@ -115,12 +115,10 @@ function renderBuildingLogs(buildingName, microwavesInBuilding) {
   const totalEntries = microwavesInBuilding.reduce((sum, m) => sum + m.logs.length, 0);
 
   const cards = microwavesInBuilding
-    // sort IDs (optional)
     .sort((a, b) => String(a.id).localeCompare(String(b.id)))
     .map(m => {
       const first = m.logs[0] || {};
 
-      // objective header (from first entry only)
       const header = `
         <div class="mw-objective">
           <div><b>microwave(s):</b> ${esc(first.quantity ?? "-")}</div>
@@ -130,7 +128,6 @@ function renderBuildingLogs(buildingName, microwavesInBuilding) {
         </div>
       `;
 
-      // subjective reviews (each log)
       const reviews = m.logs.map((log, i) => `
         <div class="mw-review">
           <div class="mw-review-title"><b>review:</b> ${i + 1} / ${m.logs.length}</div>
@@ -143,7 +140,6 @@ function renderBuildingLogs(buildingName, microwavesInBuilding) {
       return `
         <div class="mw-card">
           ${header}
-          <hr>
           ${reviews}
         </div>
       `;
@@ -155,7 +151,7 @@ function renderBuildingLogs(buildingName, microwavesInBuilding) {
       <p class="building-title">${esc(buildingName)}</p>
       <p class="building-subtitle">${totalMicros} unique microwave location logs, ${totalEntries} total log entr${totalEntries === 1 ? "y" : "ies"}</p>
       <hr>
-      ${cards || "<p>no microwaves logged for this building!</p>"}
+      ${cards || "<p>no microwaves logged for this building (yet)!</p>"}
     </div>
   `;
 
@@ -189,7 +185,7 @@ function renderBuildingLogs(buildingName, microwavesInBuilding) {
         color: "#0000ff",
         weight: 2,
         opacity: 0.9,
-        fillOpacity: 0.08,
+        fillOpacity: 0.1,
         dashArray: "1, 5"
       },
       onEachFeature: (feature, layer) => {
