@@ -510,3 +510,19 @@ body, button, input, select, textarea, .leaflet-container, .leaflet-popup-conten
 #right-box{
   padding-top: 32px;
 }
+
+.mw-objective{
+  font-weight: 700;
+  text-transform: lowercase;
+}
+
+.mw-review{
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 2px dotted var(--blue);
+}
+
+.mw-review-title{
+  margin-bottom: 6px;
+  font-weight: 700;
+}
