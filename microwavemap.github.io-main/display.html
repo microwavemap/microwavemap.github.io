@@ -181,7 +181,6 @@ const FilterControl = L.Control.extend({
       </label>
     `;
 
-    // prevent map drag/scroll when interacting
     L.DomEvent.disableClickPropagation(container);
     L.DomEvent.disableScrollPropagation(container);
 
@@ -202,6 +201,9 @@ onlyUnrestrictedMapEl.addEventListener("change", () => {
     renderBuildingLogs(lastClickedBuilding, microwavesByBuilding[lastClickedBuilding] || []);
   }
 });
+    const markersAll = L.layerGroup().addTo(map);
+    const markersUnrestricted = L.layerGroup();
+    let activeMarkers = markersAll;
     
     let microwavesByBuilding = {}; 
     let selectedLayer = null;
