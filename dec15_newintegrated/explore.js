@@ -406,7 +406,6 @@ window.APP = window.APP || {};
         <div>
           <p class="building-title">nearest microwave</p>
           <p class="building-subtitle">${meters} m away ${onlyUnrestricted ? "(unrestricted only)" : ""}</p>
-          <hr>
 
           <div class="mw-card">
             <div class="mw-objective">
