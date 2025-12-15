@@ -110,46 +110,57 @@ function openRightPanel() {
       }[c]));
     }
 
-    function renderBuildingLogs(buildingName, microwavesInBuilding) {
-      const totalMicros = microwavesInBuilding.length;
-      const totalEntries = microwavesInBuilding.reduce((sum, m) => sum + m.logs.length, 0);
+function renderBuildingLogs(buildingName, microwavesInBuilding) {
+  const totalMicros = microwavesInBuilding.length;
+  const totalEntries = microwavesInBuilding.reduce((sum, m) => sum + m.logs.length, 0);
 
-      const cards = microwavesInBuilding
-        .sort((a,b) => String(a.id).localeCompare(String(b.id)))
-        .map(m => {
-          const entries = m.logs.map((log, i) => `
-            <div class="log-entry">
-              <div><b>entry:</b> ${i+1} / ${m.logs.length}</div>
-              <div><b>microwave(s):</b> ${esc(log.quantity)}</div>
-              <div><b>floor #:</b> ${esc(log.floor)}</div>
-              <div><b>room #:</b> ${esc(log.room)}</div>
-              <div><b>access:</b> ${esc(log.key)}</div>
-              <div><b>rating:</b> ${esc(log.rating || "-")} / 5</div>
-              <div><b>note:</b> ${esc(log.note || "-")}</div>
-              <div><b>contributed by:</b> ${esc(log.contributor || "-")}</div>
-              <hr>
-            </div>
-          `).join("");
+  const cards = microwavesInBuilding
+    // sort IDs (optional)
+    .sort((a, b) => String(a.id).localeCompare(String(b.id)))
+    .map(m => {
+      const first = m.logs[0] || {};
 
-          return `
-            <div class="mw-card">
-              <p><b>microwaveID:</b> ${esc(m.id)}</p>
-              ${entries}
-            </div>
-          `;
-        }).join("");
+      // objective header (from first entry only)
+      const header = `
+        <div class="mw-objective">
+          <div><b>microwave(s):</b> ${esc(first.quantity ?? "-")}</div>
+          <div><b>floor #:</b> ${esc(first.floor ?? "-")}</div>
+          <div><b>room #:</b> ${esc(first.room ?? "-")}</div>
+          <div><b>access:</b> ${esc(first.key ?? "-")}</div>
+        </div>
+      `;
 
-rightBox.innerHTML = `
-  <div>
-    <p class="building-title">${esc(buildingName)}</p>
-    <p class="building-subtitle">${totalMicros} unique microwave location logs, ${totalEntries} total log entr${totalEntries === 1 ? "y" : "ies"}</p>
-    <hr>
-    ${cards || "<p>no microwaves logged for this building!</p>"}
-  </div>
-`;
+      // subjective reviews (each log)
+      const reviews = m.logs.map((log, i) => `
+        <div class="mw-review">
+          <div class="mw-review-title"><b>review:</b> ${i + 1} / ${m.logs.length}</div>
+          <div><b>rating:</b> ${esc(log.rating || "-")} / 5</div>
+          <div><b>note:</b> ${esc(log.note || "-")}</div>
+          <div><b>contributed by:</b> ${esc(log.contributor || "-")}</div>
+        </div>
+      `).join("");
 
-      openRightPanel();
-    }
+      return `
+        <div class="mw-card">
+          ${header}
+          <hr>
+          ${reviews}
+        </div>
+      `;
+    })
+    .join("");
+
+  rightBox.innerHTML = `
+    <div>
+      <p class="building-title">${esc(buildingName)}</p>
+      <p class="building-subtitle">${totalMicros} unique microwave location logs, ${totalEntries} total log entr${totalEntries === 1 ? "y" : "ies"}</p>
+      <hr>
+      ${cards || "<p>no microwaves logged for this building!</p>"}
+    </div>
+  `;
+
+  openRightPanel();
+}
 
     let microwavesByBuilding = {}; // populated after CSV loads
     let selectedLayer = null;
