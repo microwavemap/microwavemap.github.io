@@ -194,9 +194,13 @@ map.addControl(new FilterControl());
 const onlyUnrestrictedMapEl = document.getElementById("only-unrestricted-map");
 
 onlyUnrestrictedMapEl.addEventListener("change", () => {
-  if (!lastClickedBuilding) return;
-  const list = microwavesByBuilding[lastClickedBuilding] || [];
-  renderBuildingLogs(lastClickedBuilding, list);
+  map.removeLayer(activeMarkers);
+  activeMarkers = onlyUnrestrictedMapEl.checked ? markersUnrestricted : markersAll;
+  map.addLayer(activeMarkers);
+
+  if (lastClickedBuilding) {
+    renderBuildingLogs(lastClickedBuilding, microwavesByBuilding[lastClickedBuilding] || []);
+  }
 });
     
     let microwavesByBuilding = {}; 
@@ -288,18 +292,25 @@ onlyUnrestrictedMapEl.addEventListener("change", () => {
         });
         microwavesByBuilding = byBuilding;
 
-        Object.values(microwaves).forEach(m => {
-          if (!Number.isFinite(m.lat) || !Number.isFinite(m.lng)) return;
+Object.values(microwaves).forEach(m => {
+  if (!Number.isFinite(m.lat) || !Number.isFinite(m.lng)) return;
 
-          L.circleMarker([m.lat, m.lng], {
-            radius: 4,
-            weight: 1,
-            fillOpacity: 1,
-            color: "#0000ff",
-            fillColor: "#fff933",
-            interactive: false
-          }).addTo(group);
-        });
+  const first = m.logs?.[0] || {};
+  const access = String(first.key || "").trim().toLowerCase();
+  const isUnrestricted = access === "unrestricted";
+
+  const marker = L.circleMarker([m.lat, m.lng], {
+    radius: 4,
+    weight: 1,
+    fillOpacity: 1,
+    color: "#0000ff",
+    fillColor: "#fff933",
+    interactive: false
+  });
+
+  marker.addTo(markersAll);
+  if (isUnrestricted) marker.addTo(markersUnrestricted);
+});
 
         const counts = {};
         data.forEach(r => {
