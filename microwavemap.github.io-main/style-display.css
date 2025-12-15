@@ -554,3 +554,49 @@ body, button, input, select, textarea, .leaflet-container, .leaflet-popup-conten
 .mw-filter-toggle input{
   accent-color: var(--blue);
 }
+
+.mw-mode-control{
+  background: #fff;
+  border: 2.5px solid var(--blue);
+  padding: 6px 8px;
+  margin-top: 6px;
+  border-radius: 0;
+}
+
+.mw-mode-title{
+  font-weight: 700;
+  font-size: 12px;
+  color: var(--blue);
+  margin-bottom: 6px;
+  text-transform: lowercase;
+}
+
+.mw-mode-buttons{
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mw-map-btn{
+  border: 2.5px solid var(--blue);
+  background: var(--highlight);
+  color: var(--blue);
+  font-family: var(--font);
+  font-weight: 700;
+  font-size: 12px;
+  padding: 6px 8px;
+  cursor: pointer;
+  border-radius: 0;
+  width: 100%;
+  text-align: left;
+}
+
+.mw-map-btn:hover{
+  background: var(--blue);
+  color: #fff;
+}
+
+.mw-map-btn.active{
+  background: var(--blue);
+  color: #fff;
+}
