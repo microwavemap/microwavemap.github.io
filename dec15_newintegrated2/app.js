@@ -21,11 +21,9 @@ function setMode(name){
 }
 
 window.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("submitBtn")?.addEventListener("click", () => setMode("submit"));
+  document.getElementById("exploreBtn")?.addEventListener("click", () => setMode("explore"));
+  document.getElementById("microguessrBtn")?.addEventListener("click", () => setMode("microguessr"));
+
   setMode("explore");
 });
-document.getElementById("submitBtn").addEventListener("click", () => setMode("submit"));
-document.getElementById("exploreBtn").addEventListener("click", () => setMode("explore"));
-document.getElementById("microguessrBtn").addEventListener("click", () => setMode("microguessr"));
-
-setMode("submit");
-
