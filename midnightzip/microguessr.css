@@ -24,7 +24,10 @@ font-family:var(--font) !important;
 
 /* --- header/nav --- */
 
-a {
+a.nav-btn,
+a.nav-btn:visited,
+a.nav-btn:hover,
+a.nav-btn:active {
   text-decoration: none;
   color: inherit;
 }
@@ -83,15 +86,16 @@ gap:14px;
 #screen-instructions p{ color:var(--blue); margin:0; }
 
 .btn{
-font-weight:700;
-border:var(--solid);
-background:#fff;
-color:var(--blue);
-font-size:12px;
-padding:10px 16px;
-cursor:pointer;
-text-transform:uppercase;
-white-space:nowrap;
+  flex:0 0 auto;
+  font-weight:700;
+  border:2px solid var(--blue);
+  background:#fff;
+  color:var(--blue);
+  font-size:12px;
+  padding:6px 12px;
+  cursor:pointer;
+  text-transform:uppercase;
+  white-space:nowrap;
 }
 .btn:hover{ background:var(--blue); color:#fff; }
 .btn:disabled{ opacity:0.5; background:#fff; color:var(--blue); }
