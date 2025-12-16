@@ -15,6 +15,7 @@ function setMode(name){
   if (!window.MODES[name]) return;
   if (currentMode) window.MODES[currentMode]?.exit?.();
   currentMode = name;
+  sessionStorage.setItem("mwMode", name);
   window.MODES[currentMode].enter();
   setBodyModeClass(currentMode);
   setActiveNav(name + "Btn");
@@ -23,11 +24,13 @@ function setMode(name){
 window.addEventListener("DOMContentLoaded", () => {
   document.getElementById("submitBtn")?.addEventListener("click", () => setMode("submit"));
   document.getElementById("exploreBtn")?.addEventListener("click", () => setMode("explore"));
+  document.getElementById("microguessrBtn")?.addEventListener("click", (e) => {
+    if (e.currentTarget.tagName !== "A") {
+      e.preventDefault();
+      setMode("microguessr");
+    }
+  });
 
-  const mg = document.getElementById("microguessrBtn");
-  if (mg && mg.tagName !== "A") {
-    mg.addEventListener("click", () => setMode("microguessr"));
-  }
-
-  setMode("explore");
+  const savedMode = sessionStorage.getItem("mwMode") || "explore";
+  setMode(savedMode);
 });
