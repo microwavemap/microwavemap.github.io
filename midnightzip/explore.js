@@ -299,9 +299,9 @@ window.APP = window.APP || {};
         firstLog: m.logs?.[0] || {},
         logs: m.logs || []
       }));
-
-    markersAll = L.layerGroup().addTo(map);
-    markersUnrestricted = L.layerGroup();
+    
+    markersAll = L.featureGroup().addTo(map);
+    markersUnrestricted = L.featureGroup();
     activeMarkers = markersAll;
 
     Object.values(microwaves).forEach(m => {
