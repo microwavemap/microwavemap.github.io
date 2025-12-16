@@ -37,15 +37,16 @@ justify-content:center;
 flex-wrap:wrap;
 }
 .nav-btn{
-font-weight:700;
-border:var(--solid);
-background:#fff;
-color:var(--blue);
-font-size:12px;
-padding:8px 14px;
-cursor:pointer;
-text-transform:uppercase;
-white-space:nowrap;
+  flex:0 0 auto;
+  font-weight:700;
+  border:2px solid var(--blue);
+  background:#fff;
+  color:var(--blue);
+  font-size:12px;
+  padding:6px 12px;
+  cursor:pointer;
+  text-transform:uppercase;
+  white-space:nowrap;
 }
 .nav-btn:hover,
 .nav-btn.active{
