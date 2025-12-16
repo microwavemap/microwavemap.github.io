@@ -157,6 +157,7 @@ window.APP = window.APP || {};
     }).join("");
 
     setRightPanelHTML("", `
+        <p class="building-title">nearest microwave</p>
       <div>
         <p class="building-title">${esc(buildingName)}</p>
         <p class="building-subtitle">
