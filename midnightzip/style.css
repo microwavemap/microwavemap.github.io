@@ -113,10 +113,6 @@ body, button, input, select, textarea, .leaflet-container, .leaflet-popup-conten
 }
 
 /* ---------- header + nav ---------- */
-a.nav-btn {
-  text-decoration: none;
-}
-
 .site-header{
   margin-top:6px;
   padding:8px;
