@@ -118,7 +118,6 @@ a.nav-btn:visited,
 a.nav-btn:hover,
 a.nav-btn:active {
   text-decoration: none;
-  color: inherit;
 }
 
 .site-header{
