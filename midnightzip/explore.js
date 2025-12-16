@@ -362,7 +362,7 @@ window.APP = window.APP || {};
         : microwavesFlat;
 
       if (!candidates.length){
-        setRightPanelHTML("nearest microwave", `
+        setRightPanelHTML("", `
           <div>
             <p class="building-title">no matches</p>
             <p class="building-subtitle">no microwaves available under current filter.</p>
@@ -401,12 +401,10 @@ window.APP = window.APP || {};
       const first = best.firstLog || {};
       const logs = Array.isArray(best.logs) ? best.logs : [];
 
-      setRightPanelHTML("nearest microwave", `
+      setRightPanelHTML("", `
         <div>
-          <p class="building-title">nearest microwave</p>
+          <p class="building-title"></p>
           <p class="building-subtitle">${meters} m away ${onlyUnrestricted ? "(unrestricted only)" : ""}</p>
-          <hr>
-
           <div class="mw-card">
             <div class="mw-objective">
               <div><b>building:</b> ${esc(best.building || "-")}</div>
