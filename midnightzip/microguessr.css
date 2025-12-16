@@ -32,7 +32,19 @@ a.nav-btn:active {
   color: inherit;
 }
 
-.site-header{ padding:10px 14px; }
+.site-header{
+  margin-top:6px;
+  padding:8px;
+  box-sizing:border-box;
+}
+
+.header-inner{
+  width:fit-content;
+  max-width:90vw;
+  margin:0 auto;
+  box-sizing:border-box;
+}
+
 .nav{
 display:flex;
 gap:10px;
