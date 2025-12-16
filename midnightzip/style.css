@@ -113,10 +113,7 @@ body, button, input, select, textarea, .leaflet-container, .leaflet-popup-conten
 }
 
 /* ---------- header + nav ---------- */
-a.nav-btn,
-a.nav-btn:visited,
-a.nav-btn:hover,
-a.nav-btn:active {
+a.nav-btn {
   text-decoration: none;
 }
 
