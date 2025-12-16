@@ -153,6 +153,7 @@ a.nav-btn:active {
   cursor:pointer;
   text-transform:uppercase;
   white-space:nowrap;
+  text-decoration: none;
 }
 
 .nav-btn:hover,
