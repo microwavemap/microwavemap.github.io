@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>mcgill microwave map - microguessr</title>
+  <link rel="icon" type="image/x-icon" href="microwave_favicon.jpg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin></script>
+  <script src="https://unpkg.com/papaparse@5.3.2/papaparse.min.js"></script>
+
+  <style>
+    :root{
+      --blue:#0000ff;
+      --highlight:#fff933;
+      --font:"Courier Prime", monospace;
+      --gap:16px;
+      --border:2px dotted var(--blue);
+      --solid:2px solid var(--blue);
+    }
+
+    html, body{ height:100%; }
+    body{
+      margin:0;
+      min-height:100vh;
+      background:var(--highlight);
+      color:var(--blue);
+      font-family:var(--font);
+    }
+
+    body, button, input, select, textarea, .leaflet-container, .leaflet-popup-content{
+      font-family:var(--font) !important;
+    }
+
+    /* --- header/nav --- */
+    .site-header{ padding:10px 14px; }
+    .nav{
+      display:flex;
+      gap:10px;
+      justify-content:center;
+      flex-wrap:wrap;
+    }
+    .nav-btn{
+      font-weight:700;
+      border:var(--solid);
+      background:#fff;
+      color:var(--blue);
+      font-size:12px;
+      padding:8px 14px;
+      cursor:pointer;
+      text-transform:uppercase;
+      white-space:nowrap;
+    }
+    .nav-btn:hover,
+    .nav-btn.active{
+      background:var(--blue);
+      color:#fff;
+    }
+
+    /* --- app wrapper --- */
+    #app{
+      max-width:1200px;
+      width: 70vw;
+      margin:0 auto;
+      padding:16px;
+    }
+
+    /* --- card-ish sections --- */
+    .card{
+      background:#fff;
+      border:var(--border);
+      padding:24px;
+    }
+
+    /* --- instructions screen --- */
+    #screen-instructions{
+      max-width:700px;
+      margin:0 auto;
+      text-align:center;
+      display:grid;
+      gap:14px;
+    }
+
+    [hidden] { display: none !important; }
+
+    #screen-instructions p{ color:var(--blue); margin:0; }
+
+    .btn{
+      font-weight:700;
+      border:var(--solid);
+      background:#fff;
+      color:var(--blue);
+      font-size:12px;
+      padding:10px 16px;
+      cursor:pointer;
+      text-transform:uppercase;
+      white-space:nowrap;
+    }
+    .btn:hover{ background:var(--blue); color:#fff; }
+    .btn:disabled{ opacity:0.5; background:#fff; color:var(--blue); }
+
+    /* --- round screen: instructions top, squares middle, bottom bar --- */
+    #screen-round{ display:grid; gap:var(--gap); }
+
+    .mg-top{
+      border:var(--border);
+      background:#fff;
+      padding:14px 16px;
+      font-weight:700;
+    }
+
+    .mg-mid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:var(--gap);
+      align-items:stretch;
+    }
+
+    .square{
+      border:var(--border);
+      background:#fff;
+      aspect-ratio: 1 / 1;
+      overflow:hidden;
+      display:grid;
+    }
+
+    #round-image{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+
+    #map{
+      width:100%;
+      height:100%;
+      background:#fff;
+    }
+
+    .mg-bottom{
+      border:var(--border);
+      background:#fff;
+      padding:12px 16px;
+      display:grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items:center;
+      gap:var(--gap);
+      font-weight:700;
+    }
+
+    .right{ text-align:right; }
+
+    /* --- responsive --- */
+    @media (max-width: 900px){
+      .mg-mid{ grid-template-columns: 1fr; }
+      .mg-bottom{ grid-template-columns: 1fr; }
+      .right{ text-align:left; }
+    }
+
+    /* --- Leaflet theming (kept minimal) --- */
+    .leaflet-control-zoom,
+    .leaflet-control-zoom a{
+      border:none !important;
+      box-shadow:none !important;
+      background:var(--highlight) !important;
+      color:var(--blue) !important;
+      border-radius:0 !important;
+    }
+    .leaflet-control-zoom{
+      border:2.5px solid var(--blue) !important;
+      overflow:hidden;
+    }
+    .leaflet-control-zoom a{
+      width:28px !important;
+      height:28px !important;
+      line-height:28px !important;
+      font-size:20px !important;
+    }
+    .leaflet-control-zoom a:hover{
+      background:var(--blue) !important;
+      color:#fff !important;
+    }
+    .leaflet-control-attribution{
+      background:#fff;
+      color:var(--blue);
+      border:none !important;
+      padding:0 4px;
+    }
+  </style>
+</head>
+
+<body>
+  <header class="site-header">
+    <nav class="nav">
+      <button class="nav-btn" id="submitBtn" type="button">submit</button>
+      <button class="nav-btn" id="exploreBtn" type="button">explore</button>
+      <button class="nav-btn active" id="microguessrBtn" type="button">microguessr</button>
+    </nav>
+  </header>
+
+  <div id="app">
+    <section id="screen-instructions" class="card">
+      <h1>microguessr</h1>
+      <p>
+        there are 5 rounds of microguessr! each round shows a photo of microwaves on mcgill campus and an empty map!
+        click the map to place your guess, then proceed to see your score. the scores can go up to 5,000 points if you are within 25m radius of the microwave spot, but you have to get within 500m to get any points at all.
+      </p>
+      <button id="btn-start" class="btn" type="button">start</button>
+    </section>
+
+    <section id="screen-round" hidden>
+      <div id="info-label" class="mg-top">click a spot on the map to place your guess.</div>
+
+      <div class="mg-mid">
+        <div class="square">
+          <img id="round-image" alt="Round image" />
+        </div>
+        <div class="square">
+          <div id="map"></div>
+        </div>
+      </div>
+
+      <div class="mg-bottom">
+        <div id="round-label">round 1 / 5</div>
+        <button id="btn-proceed" class="btn" type="button" disabled>proceed</button>
+        <div class="right">total: <span id="total-score">0</span></div>
+      </div>
+    </section>
+
+    <section id="screen-summary" class="card" hidden>
+      <h2>results</h2>
+      <pre id="summary-text"></pre>
+      <button id="btn-restart" class="btn" type="button">lets go again</button>
+    </section>
+  </div>
+
+  <script src="https://unpkg.com/leaflet-labeltextcollision/leaflet-labeltextcollision.js"></script>
+  <script src="geojson.js"></script>
+  <script src="map-init.js"></script>
+  <script src="app.js"></script>
+
+
+  <script>
+	const map = window.APP?.map;
+
+	let campusLayer = null;
+
+	function renderCampusGeojson() {
+  if (!map) return;
+
+  const data =
+    window.geojsonFeature ||
+    window.geojsonData ||
+    window.GEOJSON ||
+    window.campusGeojson;
+
+  if (!data) {
+    console.warn("nooo geojson here!");
+    return;
+  }
+
+  if (campusLayer) map.removeLayer(campusLayer);
+
+  campusLayer = L.geoJSON(data, {
+    style: {
+      color: "#0000ff",
+      weight: 2,
+      opacity: 0.9,
+      dashArray: "1, 5",
+    },
+  }).addTo(map);
+}
+
+renderCampusGeojson();
+
+    const ROUNDS = [
+      { id: 1, imageUrl: "IMG_2158.JPG", target: { lat: 45.5055585, lng: -73.57643444}, targetInfo: "in the Engineering Café of McConnell Engineering Building." },
+      { id: 2, imageUrl: "IMG_2130.JPG", target: { lat: 45.5047077, lng: -73.57497295 }, targetInfo: "in the Geographic Information Centre (room 512) in Burnside Hall." },
+      { id: 3, imageUrl: "IMG_3995.jpeg", target: { lat: 45.50587412, lng: -73.57318516 }, targetInfo: "beside Vihn's Café, on the main floor of the Strathcona Music Building." },
+      { id: 4, imageUrl: "IMG_1631.JPG", target: { lat: 45.50353232, lng: -73.57668676 }, targetInfo: "in the basement of Redpath, beside the Cyberthèque." },
+      { id: 5, imageUrl: "IMG_2152.JPG", target: { lat: 45.50483473, lng: -73.57496602 }, targetInfo: "niche... in the GSAMS (Graduate Student Association for Mathematics and Statistics) lounge, room 1024 of Burnside Hall." },
+    ];
+
+const SCORE = {
+  maxPerRound: 5000,
+  decayMeters: 250,
+  fullScoreWithinMeters: 25,
+};
+
+function scoreFromDistance(m){
+  if (m <= SCORE.fullScoreWithinMeters) return SCORE.maxPerRound;
+  return Math.max(0, Math.round(SCORE.maxPerRound * Math.exp(-m / SCORE.decayMeters)));
+}
+    const ui = {
+      screenInstructions: document.getElementById("screen-instructions"),
+      screenRound: document.getElementById("screen-round"),
+      screenSummary: document.getElementById("screen-summary"),
+      btnStart: document.getElementById("btn-start"),
+      btnProceed: document.getElementById("btn-proceed"),
+      btnRestart: document.getElementById("btn-restart"),
+      img: document.getElementById("round-image"),
+      roundLabel: document.getElementById("round-label"),
+      info: document.getElementById("info-label"),
+      total: document.getElementById("total-score"),
+      summaryText: document.getElementById("summary-text"),
+    };
+
+    const Phase = { INSTRUCTIONS:"INSTRUCTIONS", PLACE:"PLACE", NEXT:"NEXT", DONE:"DONE" };
+    let phase = Phase.INSTRUCTIONS;
+    let roundIndex = 0;
+    let totalScore = 0;
+    let guesses = [];
+    let currentGuess = null;
+    let guessMarker = null, targetMarker = null, lineToTarget = null;
+	let instructionsDismissed = false;
+
+    const getRound = () => ROUNDS[roundIndex];
+
+	function show(which){
+	  if (ui.screenInstructions) ui.screenInstructions.hidden = (which !== "instructions") || instructionsDismissed;
+	  if (ui.screenRound) ui.screenRound.hidden = which !== "round";
+	  if (ui.screenSummary) ui.screenSummary.hidden = which !== "summary";
+	}
+
+    function setInfo(t){ ui.info.textContent = t; }
+    function setTotal(){ ui.total.textContent = String(totalScore); }
+
+    function clearOverlays(){
+      if (!map) return;
+      [guessMarker, targetMarker, lineToTarget].forEach(l => l && map.removeLayer(l));
+      guessMarker = targetMarker = lineToTarget = null;
+    }
+
+    function scoreFromDistance(m){
+      return Math.max(0, Math.round(SCORE.maxPerRound * Math.exp(-m / SCORE.decayMeters)));
+    }
+
+    function renderRound(){
+      const r = getRound();
+      clearOverlays();
+      currentGuess = null;
+
+      ui.img.src = r.imageUrl;
+      ui.img.alt = `Round ${r.id}`;
+      ui.roundLabel.textContent = `Round ${r.id} / ${ROUNDS.length}`;
+
+      setTotal();
+      setInfo("click on the map where you think this microwave photo was taken.");
+      ui.btnProceed.textContent = "proceed";
+      ui.btnProceed.disabled = true;
+      phase = Phase.PLACE;
+    }
+
+    function placeGuess(latlng){
+      if (!map) return;
+      currentGuess = { lat: latlng.lat, lng: latlng.lng };
+
+      if (guessMarker) map.removeLayer(guessMarker);
+		guessMarker = L.circleMarker([currentGuess.lat, currentGuess.lng], { 
+		  radius: 6,
+		  weight: 2,
+		  fillOpacity: 1,
+		  color: "#0000ff",
+		  fillColor: "#fff933"
+		}).addTo(map);
+
+      ui.btnProceed.disabled = false;
+      setInfo("guess placed. click proceed to reveal and score.");
+    }
+
+    function revealAndScore(){
+      const r = getRound();
+      const dist = map.distance([currentGuess.lat, currentGuess.lng], [r.target.lat, r.target.lng]);
+      const pts = scoreFromDistance(dist);
+      totalScore += pts;
+
+	  targetMarker = L.circleMarker([r.target.lat, r.target.lng], { 
+		    radius: 8,
+		    weight: 3,
+		    fillOpacity: 1,
+		    color: "#0000ff",
+		    fillColor: "#fff933"
+	  }).addTo(map);
+
+  	  lineToTarget = L.polyline([[currentGuess.lat, currentGuess.lng],[r.target.lat, r.target.lng]], { 
+		  color: "#0000ff",
+		  weight: 2,
+		  dashArray: "4,6"
+		}).addTo(map);
+
+      guesses.push({ roundId:r.id, distanceM:dist, score:pts });
+      setTotal();
+
+      setInfo(`you were ${Math.round(dist)} m away. round score: ${pts}. these here microwaves are ${r.targetInfo || "?"}`.trim());
+      ui.btnProceed.textContent = (roundIndex < ROUNDS.length - 1) ? "next round" : "see results";
+      phase = Phase.NEXT;
+    }
+
+    function renderSummary(){
+      show("summary");
+      ui.summaryText.textContent =
+        [`Final score: ${totalScore}`, ...guesses.map(g => `Round ${g.roundId}: ${Math.round(g.distanceM)} m, ${g.score} pts`)]
+        .join("\n");
+      phase = Phase.DONE;
+    }
+
+    if (map){
+      map.on("click", (e) => { if (phase === Phase.PLACE) placeGuess(e.latlng); });
+    }
+
+    ui.btnStart.addEventListener("click", () => {
+      instructionsDismissed = true;
+      roundIndex = 0; totalScore = 0; guesses = []; clearOverlays();
+      show("round");
+      renderRound();
+    });
+
+    ui.btnProceed.addEventListener("click", () => {
+      if (phase === Phase.PLACE){
+        if (!currentGuess) return setInfo("click on the map first.");
+        revealAndScore();
+        return;
+      }
+      if (phase === Phase.NEXT){
+        if (roundIndex < ROUNDS.length - 1){
+          roundIndex += 1;
+          renderRound();
+        } else {
+          renderSummary();
+        }
+      }
+    });
+
+    ui.btnRestart.addEventListener("click", () => location.reload());
+
+    show("instructions");
+  </script>
+</body>
+</html>
