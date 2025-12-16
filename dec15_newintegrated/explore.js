@@ -404,7 +404,7 @@ window.APP = window.APP || {};
 
       setRightPanelHTML("", `
         <div>
-          <p class="building-title">nearest microwave</p>
+          <p class="building-title"></p>
           <p class="building-subtitle">${meters} m away ${onlyUnrestricted ? "(unrestricted only)" : ""}</p>
 
           <div class="mw-card">
