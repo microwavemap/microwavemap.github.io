@@ -402,7 +402,7 @@ window.APP = window.APP || {};
       const first = best.firstLog || {};
       const logs = Array.isArray(best.logs) ? best.logs : [];
 
-      setRightPanelHTML("nearest microwave", `
+      setRightPanelHTML("", `
         <div>
           <p class="building-title">nearest microwave</p>
           <p class="building-subtitle">${meters} m away ${onlyUnrestricted ? "(unrestricted only)" : ""}</p>
