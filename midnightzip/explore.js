@@ -163,14 +163,12 @@ window.APP = window.APP || {};
           ${totalMicros} microwave location(s), ${totalEntries} review entr${totalEntries === 1 ? "y" : "ies"}
           ${onlyUnrestricted ? " (unrestricted only)" : ""}
         </p>
-        <hr>
         ${cards || "<p>no microwaves match this filter for this building.</p>"}
       </div>
     `);
   }
 
   function buildControls(){
-    // Filter control
     const FilterControl = L.Control.extend({
       options: { position: "topleft" },
       onAdd: function(){
