@@ -50,6 +50,7 @@ flex-wrap:wrap;
   cursor:pointer;
   text-transform:uppercase;
   white-space:nowrap;
+  text-decoration: none;
 }
 .nav-btn:hover,
 .nav-btn.active{
