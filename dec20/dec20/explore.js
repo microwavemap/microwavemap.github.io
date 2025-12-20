@@ -402,8 +402,7 @@ function renderBuildingLogs(buildingName, microwavesInBuilding) {
         </div>
 
         <div class="mw-objective mw-objective-compact">
-          <div><b>microwave(s):</b> ${esc(first.quantity ?? "-")}</div>
-          ${first.room ? `<div><b>room:</b> ${esc(first.room)}</div>` : ""}
+          <div><b>microwave(s):</b> ${esc(first.quantity ?? "-")}</div>}
         </div>
 
         <details class="mw-details">
