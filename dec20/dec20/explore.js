@@ -446,7 +446,7 @@ function loadCSVAndMakeMarkers(map) {
       parseMicrowavesAndMakeMarkers(map, data);
 
       // leaderboard
-      const counts = {};
+const counts = {};
       data.forEach(r => {
         const name = String(r.contributor ?? "").trim();
         if (!name || name === "?") return;
@@ -463,11 +463,6 @@ function loadCSVAndMakeMarkers(map) {
       const totalEl = document.getElementById("top-contributor-total");
       if (nameEl) nameEl.textContent = topName;
       if (totalEl) totalEl.textContent = String(topTotal);
-
-      const lineEl = document.getElementById("leaderboard-line");
-      if (lineEl) {
-        lineEl.textContent = `top contributor is ${topName}, with ${topTotal} microwaves logged!`;
-      }
     },
     error: (err) => console.error("papa parse error:", err)
   });
