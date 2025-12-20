@@ -182,7 +182,6 @@ function roomTitle(firstLog) {
 function buildControls(map) {
   const st = window.APP.state;
 
-  // only unrestricted
   const FilterControl = L.Control.extend({
     options: { position: "topleft" },
     onAdd: function () {
@@ -214,26 +213,26 @@ function buildControls(map) {
     clearDistanceGraphics(map);
   });
 
-  const ModeControl = L.Control.extend({
-    options: { position: "topleft" },
-    onAdd: function(){
-      const container = L.DomUtil.create("div", "leaflet-control mw-mode-control");
-      container.innerHTML = `
-        <div class="mw-mode-buttons">
-          <button id="mode-explore" class="mw-map-btn active" type="button">free explore</button>
-          <button id="mode-nearest" class="mw-map-btn" type="button">find nearest</button>
-        </div>
-      `;
-      L.DomEvent.disableClickPropagation(container);
-      L.DomEvent.disableScrollPropagation(container);
-      return container;
-    }
-  });
+const ModeControl = L.Control.extend({
+  options: { position: "topleft" },
+  onAdd: function(){
+    const container = L.DomUtil.create("div", "leaflet-control mw-mode-control");
+    container.innerHTML = `
+      <div class="mw-mode-buttons">
+        <button id="mode-explore" class="mw-map-btn active" type="button">free explore</button>
+        <button id="mode-nearest" class="mw-map-btn" type="button">find nearest</button>
+      </div>
+    `;
+    L.DomEvent.disableClickPropagation(container);
+    L.DomEvent.disableScrollPropagation(container);
+    return container;
+  }
+});
 
-  map.addControl(new ModeControl());
+map.addControl(new ModeControl());
 
-  const exploreBtn = document.getElementById("mode-explore");
-  const nearestBtn = document.getElementById("mode-nearest");
+const exploreBtn = document.getElementById("mode-explore");
+const nearestBtn = document.getElementById("mode-nearest");
 
 function setMode(next){
   st.mode = next;
@@ -245,11 +244,15 @@ function setMode(next){
 
   if (st.mode === "nearest") {
     clearSelectedBuildingHighlight();
-    st.lastClickedBuilding = null; 
+    st.lastClickedBuilding = null;
   }
 
   clearDistanceGraphics(map);
 }
+
+exploreBtn?.addEventListener("click", () => setMode("browse"));
+nearestBtn?.addEventListener("click", () => setMode("nearest"));
+
 
   map.on("click", (e) => {
     if (st.mode !== "nearest") return;
@@ -312,7 +315,7 @@ function setMode(next){
 
           <div class="mw-objective mw-objective-compact">
             <div><b>building:</b> ${esc(best.building || "-")}</div>
-            <div><b>microwave(s):</b> ${esc(first.quantity ?? "-")}</div>}
+            <div><b>microwave(s):</b> ${esc(first.quantity ?? "-")}</div>
           </div>
 
           <details class="mw-details">
