@@ -351,18 +351,20 @@ function buildBuildingsLayer(map, geojson) {
       fillOpacity: 0.15,
       dashArray: "1, 5"
     },
-    onEachFeature: (feature, layer) => {
-      layer.on("click", () => {
-        if (st.mode === "nearest") return;
-
-        const buildingName = resolveBuildingNameFromFeature(feature);
-        st.lastClickedBuilding = buildingName;
-
-        const list = st.microwavesByBuilding[buildingName] || [];
-        highlightFeatureLayer(map, layer);
-        renderBuildingLogs(buildingName, list);
-      });
-    }
+  onEachFeature: (feature, layer) => {
+    layer.on("click", () => {
+      const st = window.APP.state;
+  
+      if (st.mode === "nearest") return;
+  
+      const buildingName = resolveBuildingNameFromFeature(feature);
+      st.lastClickedBuilding = buildingName;
+  
+      const list = st.microwavesByBuilding[buildingName] || [];
+      highlightFeatureLayer(map, layer);
+      renderBuildingLogs(buildingName, list);
+    });
+  }
   }).addTo(map);
 }
 
