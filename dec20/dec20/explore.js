@@ -6,7 +6,6 @@ document.addEventListener("DOMContentLoaded", () => {
   if (!map) return;
 
   wirePanels();
-
   buildControls(map);
 
   const gj = window.geojsonFeature;
@@ -14,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
   else console.warn("you are having geojson issues!");
 
   loadCSVAndMakeMarkers(map);
- 
+
   requestAnimationFrame(() => map.invalidateSize());
 });
 
@@ -59,10 +58,6 @@ function initExploreMap() {
 
   return map;
 }
-
-/* ---------- panels ---------- */
-
-/* ---------- panels ---------- */
 
 /* ---------- panels ---------- */
 
@@ -113,22 +108,10 @@ function setRightPanelHTML(html) {
 
   // RIGHT: open state => ">"
   const toggleRight = document.getElementById("toggle-right");
-  toggleRight && (toggleRight.textContent = ">", toggleRight.setAttribute("aria-expanded", "true"));
+  if (toggleRight) toggleRight.textContent = ">";
 }
 
 /* ---------- utilities ---------- */
-
-function cleanRoomLabel(roomRaw) {
-  const s = String(roomRaw ?? "").trim();
-  if (!s || s === "-") return "";
-  return s;
-}
-
-function roomTitleFromLogs(firstLog) {
-  const room = cleanRoomLabel(firstLog?.room);
-  if (!room) return "microwave location";
-  return `room ${room}`;
-}
 
 function esc(s) {
   return String(s ?? "")
@@ -180,6 +163,11 @@ function clearDistanceGraphics(map) {
   if (st.nearestLine) { map.removeLayer(st.nearestLine); st.nearestLine = null; }
 }
 
+function roomTitle(firstLog) {
+  const r = String(firstLog?.room ?? "").trim();
+  return r || "microwave location";
+}
+
 /* ---------- UI controls ---------- */
 
 function buildControls(map) {
@@ -217,7 +205,6 @@ function buildControls(map) {
     clearDistanceGraphics(map);
   });
 
-  // mode control (free explore / find nearest)
   const ModeControl = L.Control.extend({
     options: { position: "topleft" },
     onAdd: function(){
@@ -296,7 +283,7 @@ function buildControls(map) {
     const first = best.firstLog || {};
     const logs = Array.isArray(best.logs) ? best.logs : [];
 
-    const title = roomTitleFromLogs(first);
+    const title = roomTitle(first);
 
     setRightPanelHTML(`
       <div>
@@ -392,7 +379,7 @@ function renderBuildingLogs(buildingName, microwavesInBuilding) {
 
   const cards = filteredMicrowaves.map((m) => {
     const first = m.logs[0] || {};
-    const title = roomTitleFromLogs(first);
+    const title = roomTitle(first);
 
     const metaLine = [
       first.floor ? `floor ${esc(first.floor)}` : "",
