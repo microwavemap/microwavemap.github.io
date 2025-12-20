@@ -58,12 +58,17 @@ window.APP.initMicroguessrMap = function () {
 const SCORE = {
   maxPerRound: 5000,
   fullScoreWithinMeters: 25,
-  decayMeters: 200, 
+  decayMeters: 200,
+  maxScoringDistanceMeters: 1000
 };
 
 function scoreFromDistance(m){
   if (!Number.isFinite(m) || m < 0) return 0;
+
+  if (m > SCORE.maxScoringDistanceMeters) return 0;
+
   if (m <= SCORE.fullScoreWithinMeters) return SCORE.maxPerRound;
+
   const d = m - SCORE.fullScoreWithinMeters;
   const s = SCORE.maxPerRound * Math.exp(-d / SCORE.decayMeters);
   return Math.max(0, Math.round(s));
