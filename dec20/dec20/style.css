@@ -7,6 +7,47 @@
 }
 
 /* ---------- mw ---------- */
+.mw-card-location{
+  background: rgba(0, 0, 255, 0.04);
+  border: 2px dotted var(--blue);
+  padding: 12px;
+  margin: 12px 0;
+}
+
+.mw-card-head{
+  margin-bottom: 8px;
+}
+
+.mw-card-title{
+  font-size: 18px;
+  margin-bottom: 2px;
+}
+
+.mw-card-meta{
+  font-size: 14px;
+}
+
+.mw-objective-compact{
+  margin: 8px 0;
+}
+
+.mw-details{
+  margin-top: 10px;
+}
+
+.mw-summary{
+  cursor: pointer;
+  user-select: none;
+}
+
+.mw-details-body{
+  margin-top: 10px;
+}
+
+.mw-byline{
+  opacity: 0.85;
+}
+
 .mw-objective{
   font-weight: 700;
   text-transform: lowercase;
