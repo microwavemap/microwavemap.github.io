@@ -536,6 +536,20 @@ body, button, input, select, textarea, .leaflet-container, .leaflet-popup-conten
   color:#fff;
 }
 
+/* ---------- leaderboard ---------- */
+.leaderboard-line{
+  margin-top: 10px;
+}
+
+.leaderboard-name{
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.leaderboard-total{
+  font-weight: 700;
+}
+
 /* ---------- links ---------- */
 .email-button,
 .email-button:visited{
