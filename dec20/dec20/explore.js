@@ -296,26 +296,40 @@ function buildControls(map) {
     const first = best.firstLog || {};
     const logs = Array.isArray(best.logs) ? best.logs : [];
 
+    const title = roomTitleFromLogs(first);
+
     setRightPanelHTML(`
       <div>
         <p class="building-title">nearest microwave</p>
         <p class="building-subtitle">${meters} m away ${onlyUnrestricted ? "(unrestricted only)" : ""}</p>
-        <div class="mw-card">
-          <div class="mw-objective">
+
+        <div class="mw-card mw-card-location">
+          <div class="mw-card-head">
+            <div class="mw-card-title"><b>${esc(title)}</b></div>
+            <div class="mw-card-meta">
+              ${[first.floor ? `floor ${esc(first.floor)}` : "", first.key ? esc(first.key) : ""].filter(Boolean).join(" · ")}
+            </div>
+          </div>
+
+          <div class="mw-objective mw-objective-compact">
             <div><b>building:</b> ${esc(best.building || "-")}</div>
             <div><b>microwave(s):</b> ${esc(first.quantity ?? "-")}</div>
-            <div><b>floor #:</b> ${esc(first.floor ?? "-")}</div>
-            <div><b>room #:</b> ${esc(first.room ?? "-")}</div>
-            <div><b>access:</b> ${esc(first.key ?? "-")}</div>
+            ${first.room ? `<div><b>room:</b> ${esc(first.room)}</div>` : ""}
           </div>
-          ${logs.map((log, i) => `
-            <div class="mw-review">
-              <div class="mw-review-title"><b>review:</b> ${i + 1} / ${logs.length}</div>
-              <div><b>rating:</b> ${esc(log.rating || "-")} / 5</div>
-              <div><b>note:</b> ${esc(log.note || "-")}</div>
-              <div><b>contributed by:</b> ${esc(log.contributor || "-")}</div>
+
+          <details class="mw-details">
+            <summary class="mw-summary">reviews (${logs.length})</summary>
+            <div class="mw-details-body">
+              ${logs.map((log, i) => `
+                <div class="mw-review">
+                  <div class="mw-review-title"><b>review:</b> ${i + 1} / ${logs.length}</div>
+                  <div><b>rating:</b> ${esc(log.rating || "-")} / 5</div>
+                  <div><b>note:</b> ${esc(log.note || "-")}</div>
+                  <div class="mw-byline"><b>contributed by:</b> ${esc(log.contributor || "-")}</div>
+                </div>
+              `).join("")}
             </div>
-          `).join("")}
+          </details>
         </div>
       </div>
     `);
@@ -376,27 +390,44 @@ function renderBuildingLogs(buildingName, microwavesInBuilding) {
   const totalMicros = filteredMicrowaves.length;
   const totalEntries = filteredMicrowaves.reduce((sum, m) => sum + m.logs.length, 0);
 
-  const cards = filteredMicrowaves.map(m => {
+  const cards = filteredMicrowaves.map((m) => {
     const first = m.logs[0] || {};
-    const header = `
-      <div class="mw-objective">
-        <div><b>microwave(s):</b> ${esc(first.quantity ?? "-")}</div>
-        <div><b>floor #:</b> ${esc(first.floor ?? "-")}</div>
-        <div><b>room #:</b> ${esc(first.room ?? "-")}</div>
-        <div><b>access:</b> ${esc(first.key ?? "-")}</div>
-      </div>
-    `;
+    const title = roomTitleFromLogs(first);
+
+    const metaLine = [
+      first.floor ? `floor ${esc(first.floor)}` : "",
+      first.key ? esc(first.key) : ""
+    ].filter(Boolean).join(" · ");
 
     const reviews = m.logs.map((log, i) => `
       <div class="mw-review">
         <div class="mw-review-title"><b>review:</b> ${i + 1} / ${m.logs.length}</div>
         <div><b>rating:</b> ${esc(log.rating || "-")} / 5</div>
         <div><b>note:</b> ${esc(log.note || "-")}</div>
-        <div><b>contributed by:</b> ${esc(log.contributor || "-")}</div>
+        <div class="mw-byline"><b>contributed by:</b> ${esc(log.contributor || "-")}</div>
       </div>
     `).join("");
 
-    return `<div class="mw-card">${header}${reviews}</div>`;
+    return `
+      <div class="mw-card mw-card-location">
+        <div class="mw-card-head">
+          <div class="mw-card-title"><b>${esc(title)}</b></div>
+          <div class="mw-card-meta">${esc(metaLine || "")}</div>
+        </div>
+
+        <div class="mw-objective mw-objective-compact">
+          <div><b>microwave(s):</b> ${esc(first.quantity ?? "-")}</div>
+          ${first.room ? `<div><b>room:</b> ${esc(first.room)}</div>` : ""}
+        </div>
+
+        <details class="mw-details">
+          <summary class="mw-summary">reviews (${m.logs.length})</summary>
+          <div class="mw-details-body">
+            ${reviews}
+          </div>
+        </details>
+      </div>
+    `;
   }).join("");
 
   setRightPanelHTML(`
