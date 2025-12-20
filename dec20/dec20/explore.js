@@ -419,10 +419,6 @@ function renderBuildingLogs(buildingName, microwavesInBuilding) {
   setRightPanelHTML(`
     <div>
       <p class="building-title">${esc(buildingName)}</p>
-      <p class="building-subtitle">
-        ${totalMicros} microwave location(s), ${totalEntries} review entr${totalEntries === 1 ? "y" : "ies"}
-        ${onlyUnrestricted ? " (unrestricted only)" : ""}
-      </p>
       ${cards || "<p class='instruction'>no microwaves match this filter for this building.</p>"}
     </div>
   `);
