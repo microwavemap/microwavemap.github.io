@@ -59,6 +59,15 @@ function initExploreMap() {
   return map;
 }
 
+/* ---------- clear highlight for mode ---------- */
+function clearSelectedBuildingHighlight() {
+  const st = window.APP.state;
+  if (!st.selectedLayer) return;
+
+  st.selectedLayer.setStyle({ weight: 2, fillOpacity: 0.15 }); // match your default
+  st.selectedLayer = null;
+}
+
 /* ---------- panels ---------- */
 
 function wirePanels() {
@@ -226,18 +235,21 @@ function buildControls(map) {
   const exploreBtn = document.getElementById("mode-explore");
   const nearestBtn = document.getElementById("mode-nearest");
 
-  function setMode(next){
-    st.mode = next;
+function setMode(next){
+  st.mode = next;
 
-    exploreBtn?.classList.toggle("active", st.mode === "browse");
-    nearestBtn?.classList.toggle("active", st.mode === "nearest");
+  exploreBtn?.classList.toggle("active", st.mode === "browse");
+  nearestBtn?.classList.toggle("active", st.mode === "nearest");
 
-    map.getContainer().style.cursor = (st.mode === "nearest") ? "crosshair" : "";
-    clearDistanceGraphics(map);
+  map.getContainer().style.cursor = (st.mode === "nearest") ? "crosshair" : "";
+
+  if (st.mode === "nearest") {
+    clearSelectedBuildingHighlight();
+    st.lastClickedBuilding = null; 
   }
 
-  exploreBtn?.addEventListener("click", () => setMode("browse"));
-  nearestBtn?.addEventListener("click", () => setMode("nearest"));
+  clearDistanceGraphics(map);
+}
 
   map.on("click", (e) => {
     if (st.mode !== "nearest") return;
