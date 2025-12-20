@@ -118,6 +118,18 @@ function setRightPanelHTML(html) {
 
 /* ---------- utilities ---------- */
 
+function cleanRoomLabel(roomRaw) {
+  const s = String(roomRaw ?? "").trim();
+  if (!s || s === "-") return "";
+  return s;
+}
+
+function roomTitleFromLogs(firstLog) {
+  const room = cleanRoomLabel(firstLog?.room);
+  if (!room) return "microwave location";
+  return `room ${room}`;
+}
+
 function esc(s) {
   return String(s ?? "")
     .replaceAll("&", "&amp;")
