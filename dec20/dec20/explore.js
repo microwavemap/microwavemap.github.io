@@ -300,8 +300,7 @@ function buildControls(map) {
 
           <div class="mw-objective mw-objective-compact">
             <div><b>building:</b> ${esc(best.building || "-")}</div>
-            <div><b>microwave(s):</b> ${esc(first.quantity ?? "-")}</div>
-            ${first.room ? `<div><b>room:</b> ${esc(first.room)}</div>` : ""}
+            <div><b>microwave(s):</b> ${esc(first.quantity ?? "-")}</div>}
           </div>
 
           <details class="mw-details">
