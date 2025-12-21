@@ -79,9 +79,15 @@ function addBuildingsLayer(map, geojson) {
     window.APP.buildingsLayer = null;
   }
 
-//style the geojson, attach click behavior
+  //style the geojson, attach click behavior
   const layer = L.geoJSON(geojson, {
-    style: { color: "#0000ff", weight: 2, opacity: 0.9, dashArray: "1, 5", fillOpacity: 0.15 },
+    style: {
+      color: "#0000ff",
+      weight: 2,
+      opacity: 0.9,
+      dashArray: "1, 5",
+      fillOpacity: 0.15
+    },
     onEachFeature: (feature, featureLayer) => {
       featureLayer.on("click", (e) => {
         const buildingName =
@@ -93,11 +99,11 @@ function addBuildingsLayer(map, geojson) {
     }
   }).addTo(map);
 
-}
-
-//save layer
+  //save layer
   window.APP.buildingsLayer = layer;
-
+  return layer;
+}
+ 
 //render popup form
 function showFormPopup(latlng, buildingName) {
   const map = window.APP.map;
