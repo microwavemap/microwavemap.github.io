@@ -81,7 +81,6 @@ function addBuildingsLayer(map, geojson) {
     window.APP.buildingsLayer = null;
   }
 
-  //style the geojson, attach click behavior
   const layer = L.geoJSON(geojson, {
     style: {
       color: "#0000ff",
@@ -101,7 +100,6 @@ function addBuildingsLayer(map, geojson) {
     }
   }).addTo(map);
 
-  //save layer
   window.APP.buildingsLayer = layer;
   return layer;
 }
