@@ -6,6 +6,8 @@ i <3 VGI
 made possible with help from chatgpt
 */
 
+console.log("submit.js loaded");
+
 //initialize map
 window.APP = window.APP || {};
 
@@ -159,6 +161,8 @@ function showFormPopup(latlng, buildingName) {
     .setContent(popupForm)
     .openOn(map);
 }
+
+console.log("about to define submitMicrowaveData");
 
 //form submission
 window.submitMicrowaveData = function (lat, lng, buildingName) {
