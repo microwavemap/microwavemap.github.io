@@ -63,10 +63,10 @@ function initSubmitMap() {
     preferCanvas: true
   });
 
-  L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}.png", {
-    attribution: "&copy; OpenStreetMap &copy; CARTO",
-    maxZoom: 19
-  }).addTo(map);
+ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+     maxZoom: 19,
+     attribution: '&copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contributors'
+ }).addTo(map);
 
   window.APP.map = map;
   return map;
