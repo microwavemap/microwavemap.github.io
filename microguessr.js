@@ -18,10 +18,10 @@ window.APP.initMicroguessrMap = function () {
 
   const map = (window.APP.map = L.map("map").setView([45.5048, -73.5769], 16));
 
-  L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}.png", {
-    attribution: "&copy; OpenStreetMap &copy; CARTO",
-    maxZoom: 19
-  }).addTo(map);
+   L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+       maxZoom: 19,
+       attribution: '&copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contributors'
+   }).addTo(map);
 
 //create a space for game layers
   window.APP.layers = {
